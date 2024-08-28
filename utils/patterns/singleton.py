@@ -9,7 +9,7 @@ class Singleton(object):
 
     def __init__(self, *args, **kwargs):
         if not self.__class__._initialized:
-            self.__class__._initialized = True  # Устанавливаем флаг инициализации в True
+            self.__class__._initialized = True  # set initial flag to True
             self.init(*args, **kwargs)
 
     def init(self, *args, **kwargs):

@@ -1,19 +1,20 @@
 import asyncio
-import os
 
 from dotenv import load_dotenv
-from aiogram import Bot
 
-from bot.dispatcher import dp
+from telegram.dispatcher import dp
+from utils import DatabaseConnection
 
 
 load_dotenv()
 
 
 async def main():
-    bot = Bot(os.getenv("BOT_TOKEN"))
-    # import telegram.handlers  # load handlers
-    await dp.start_polling(bot)
+    database_connections = DatabaseConnection()
+    await database_connections.get_connection()  # Database is Singleton, that's why I call this method here
+
+    import telegram.handlers  # load handlers
+    await dp.start_polling(telegram)
 
 
 if __name__ == '__main__':
