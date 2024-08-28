@@ -1,0 +1,18 @@
+import re
+
+from telegram.Message import Message
+from telegram.punishments import warning
+from utils import AbstractHandler
+
+
+class CheckBanwordsHandler(AbstractHandler):
+
+    BANWORDS_REGEX = "(?iu)\b((у|[нз]а|(хитро|не)?вз?[ыьъ]|с[ьъ]|(и|ра)[зс]ъ?|(о[тб]|под)[ьъ]?|(.\B)+?[оаеи])?-?([её]б(?!о[рй])|и[пб][ае][тц]).*?|(н[иеа]|([дп]|верт)о|ра[зс]|з?а|с(ме)?|о(т|дно)?|апч)?-?ху([яйиеёю]|ли(?!ган)).*?|(в[зы]|(три|два|четыре)жды|(н|сук)а)?-?бл(я(?!(х|ш[кн]|мб)[ауеыио]).*?|[еэ][дт]ь?)|(ра[сз]|[зн]а|[со]|вы?|п(ере|р[оие]|од)|и[зс]ъ?|[ао]т)?п[иеё]зд.*?|(за)?п[ие]д[аое]?р(ну.*?|[оа]м|(ас)?(и(ли)?[нщктл]ь?)?|(о(ч[еи])?|ас)?к(ой)|юг)[ауеы]?|манд([ауеыи](л(и[сзщ])?[ауеиы])?|ой|[ао]вошь?(е?к[ауе])?|юк(ов|[ауи])?)|((за|вы|под|на|об|по)?трах(ну(сь|ть)?|ни(сь)?|ать|а([юяй]|л([аи])?|н([аыо])?)))|(сучк([уеаи]|ой))|(залуп(([уеаиы]|ой)?))|(жоп([уеыаи]|ой))|муд([яаио].*?|е?н([ьюия]|ей))|мля([тд]ь)?|лять|([нз]а|по)х|м[ао]л[ао]фь([яию]|[еёо]й))\b"
+
+    async def handle(self, message: Message):
+        if re.findall(CheckBanwordsHandler.BANWORDS_REGEX, message.message.text):
+            message.is_trusted = False
+            message.execute = warning(message.message)
+            return message
+
+        return await super().handle(message)
