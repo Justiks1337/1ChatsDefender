@@ -17,6 +17,7 @@ class Message:
         self.__message: AiogramMessage = message
         self._execute = None
         self._is_trusted = True
+        self._execute_middleware = False
 
     @property
     def message(self):
@@ -37,3 +38,11 @@ class Message:
     @is_trusted.setter
     def is_trusted(self, value: bool):
         self._is_trusted = value
+
+    @property
+    def execute_middleware(self):
+        return self._execute_middleware
+
+    @execute_middleware.setter
+    def execute_middleware(self, value: bool):
+        self._execute_middleware = value

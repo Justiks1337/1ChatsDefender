@@ -5,9 +5,13 @@ from telegram.chains.SuperGroupChain.NeuralCheckHandler import NeuralCheckHandle
 
 
 class SuperGroupChain(AbstractHandler):
+
+    whitelisted_chats = [-1001375992358, -4288058510, -1002184712714, -4520083042, -1002168533309]
+
     async def handle(self, message: Message):
 
-        # TODO: check whitelist
+        if message.message.chat.id not in SuperGroupChain.whitelisted_chats:
+            return await super().handle(message)
 
         check_in_database_handler = CheckInDatabaseHandler()
         neural_check_handler = NeuralCheckHandler()

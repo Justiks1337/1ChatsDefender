@@ -1,7 +1,8 @@
 import asyncio
 
-from utils import Singleton
+from aiogram.types import Message as AiogramMessage
 
+from utils import Singleton
 from telegram.Message import Message
 from telegram.middleware import middlewares
 from telegram.chains.DefaultChain.DefaultChain import DefaultChain
@@ -10,7 +11,7 @@ from telegram.chains.SuperGroupChain.SuperGroupChain import SuperGroupChain
 
 class Router(Singleton):
 
-    async def to_route(self, message: Message):
+    async def to_route(self, message: AiogramMessage):
         """
         Start message validate
 
@@ -18,9 +19,10 @@ class Router(Singleton):
         :return: None
         """
 
-        await self.execute_punishment(await self.execute_middleware(await self.validate_message(message)))
+        message = Message(message)
+        await self.__execute_punishment(await self.__execute_middleware(await self.__validate_message(message)))
 
-    async def validate_message(self, message: Message):
+    async def __validate_message(self, message: Message):
         """
         Start a chain of checks for message
 
@@ -36,7 +38,7 @@ class Router(Singleton):
 
         return message
 
-    async def execute_middleware(self, message):
+    async def __execute_middleware(self, message):
         """
         Execute all middlewares for this message
 
@@ -44,14 +46,17 @@ class Router(Singleton):
         :return: edited message by middlewares
         """
 
+        if not message.execute_middleware:
+            return message
+
         index = 0  # cursor
 
         for middleware in middlewares:
-            message = middleware.execute(message)
+            message = await middleware.execute(message)
 
         return message
 
-    async def execute_punishment(self, message: Message):
+    async def __execute_punishment(self, message: Message):
         """
         End message validate, Verdict.
 

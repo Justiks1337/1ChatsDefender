@@ -20,7 +20,8 @@ class NeuralCheckHandler(AbstractHandler):
 
         if await neural_client.check_message(message.message.text):
             message.is_trusted = False
-            message.execute = ban(message)
+            message.execute_middleware = True
+            message.execute = ban(message.message)
             return message
 
         return super().handle(message)
