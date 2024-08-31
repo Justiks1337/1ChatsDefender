@@ -14,9 +14,9 @@ class SendMessageMiddleware(MiddlewareInterface):
     admins_chat_ids = int(os.getenv("ADMINS_CHAT_ID"))  # Save admin chat id
 
     @classmethod
-    async def execute(cls, message: Message):
+    async def execute(cls, message: Message) -> Message:
         message_to_admins_chat = os.getenv("VIOLATION_MESSAGE") \
-            .replace("{user}", message.message.from_user.full_name) \
+            .replace("{nickname}", message.message.from_user.full_name) \
             .replace("{chat}", message.message.chat.title) \
             .replace("{message}", message.message.text)
 

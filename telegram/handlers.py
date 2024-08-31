@@ -1,8 +1,9 @@
 from aiogram.types import Message
 
 from telegram.dispatcher import dp
+from telegram.router import Router
 
 
 @dp.message()
 async def main_handler(message: Message):
-    pass
+    await Router().to_route(message)

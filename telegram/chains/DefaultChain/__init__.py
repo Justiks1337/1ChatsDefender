@@ -1,1 +1,1 @@
-from telegram.chains.DefaultChain.DefaultChain import IgnoreChain
+from telegram.chains.DefaultChain.DefaultChain import DefaultChain

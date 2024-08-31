@@ -5,12 +5,14 @@ from utils import AbstractHandler, Singleton
 
 from telegram.Message import Message
 from telegram.dispatcher import bot
+from telegram.punishments import delete
 
 
 class IsAdminHandler(AbstractHandler):
 
     async def handle(self, message: Message) -> Message:
-        if message.message.from_user.id in ChatAdminsFabric().get(message.message.chat.id):
+        if message.message.from_user.id in await ChatAdminsFabric().get(message.message.chat.id):
+            message.is_trusted = False
             return message
         return await super().handle(message)
 
@@ -56,7 +58,7 @@ class ChatAdminsFabric(Singleton):
             return administrators_from_cache
 
         # Attempt get administrators from server
-        await self.__get_administrators_from_server(chat_id)
+        return await self.__get_administrators_from_server(chat_id)
 
     def __get_administrators_from_cache(self, chat_id: int) -> AdministratorsCache:
         administrators = self.cached_chat_administrators.get(chat_id)
