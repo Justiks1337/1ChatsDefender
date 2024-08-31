@@ -1,3 +1,4 @@
+import logging
 from abc import ABC, abstractmethod
 import json as json_lib
 import time
@@ -16,15 +17,17 @@ class NeuralCheckHandler(AbstractHandler):
 
         # Я не хочу тратить токены в нейронке на маленькие сообщения. И писать отдельный хендлер под это не хочу. И вообще комментарий переводить на английский тоже лень
         if len(message.message.text.split(" ")) < 10:
-            return super().handle(message)
+            logging.debug("NeuralCheckHandler ignore message, because it len < 10")
+            return await super().handle(message)
 
         if await neural_client.check_message(message.message.text):
             message.is_trusted = False
             message.execute_middleware = True
             message.execute = ban(message.message)
+            logging.info("NeuralCheckHandler worked now")
             return message
 
-        return super().handle(message)
+        return await super().handle(message)
 
 
 class APIClientInterface(ABC):

@@ -1,3 +1,5 @@
+import logging
+
 from telegram.Message import Message
 from utils import AbstractHandler
 
@@ -11,6 +13,7 @@ class MessageHasTextHandler(AbstractHandler):
     async def handle(self, message: Message) -> Message:
         if not message.message.text:
             message.is_trusted = False
+            logging.debug("MessageHasTextHandler is working now")
             return message
 
         return await super().handle(message)

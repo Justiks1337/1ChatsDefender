@@ -1,3 +1,5 @@
+import logging
+
 import aiogram.types
 
 from utils import AbstractHandler
@@ -10,6 +12,7 @@ class IsJoinMessageHandler(AbstractHandler):
         if message.message.new_chat_members:
             message.is_trusted = False
             message.execute = delete(message.message)
+            logging.info("IsJoinMessageHandler is working now")
             return message
 
         return await super().handle(message)

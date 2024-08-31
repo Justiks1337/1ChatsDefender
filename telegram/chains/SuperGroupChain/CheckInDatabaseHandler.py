@@ -1,3 +1,5 @@
+import logging
+
 import aiosqlite
 
 from utils import AbstractHandler
@@ -17,6 +19,7 @@ class CheckInDatabaseHandler(AbstractHandler):
             message.is_trusted = False
             message.execute_middleware = True
             message.execute = ban(message.message)
+            logging.info("CheckInDatabaseHandler is worked now")
             return message
 
         return await super().handle(message)
