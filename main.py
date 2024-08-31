@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 
 from dotenv import load_dotenv
 
@@ -20,4 +21,10 @@ async def main():
 
 
 if __name__ == '__main__':
+    import logging
+
+    logger = logging.getLogger()
+    logger.level = logging.DEBUG
+    logging.basicConfig(filename="logs/{:%Y-%m-%d}.log".format(datetime.datetime.now()), level=logging.DEBUG)
+
     asyncio.run(main())

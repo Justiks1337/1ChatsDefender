@@ -1,3 +1,5 @@
+import logging
+
 from utils import AbstractHandler
 from telegram.Message import Message
 from telegram.chains.DefaultChain.IsJoinMessageHandler import IsJoinMessageHandler
@@ -20,6 +22,7 @@ class DefaultChain(AbstractHandler):
         result = await is_join_message_handler.handle(message)
 
         if not result.is_trusted:
+            logging.info("Default chain handle a violation.")
             return result
 
         return await super().handle(message)

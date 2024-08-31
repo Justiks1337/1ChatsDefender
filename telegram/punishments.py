@@ -1,5 +1,6 @@
 """This coroutines uses in Executor"""
 import os
+import logging
 
 import aiogram.exceptions
 import aiogram.types
@@ -22,6 +23,7 @@ async def delete(message: aiogram.types.Message):
     """
 
     await bot.delete_message(message.chat.id, message.message_id)
+    logging.debug(f"message <{message.text}> in {message.chat.title} was deleted")
 
 
 async def warning(message: aiogram.types.Message):
@@ -53,5 +55,8 @@ async def ban(message: aiogram.types.Message):
     await delete(message)
     try:
         await bot.ban_chat_member(message.chat.id, message.from_user.id)
+        logging.info(f"user {message.from_user.full_name} banned in {message.chat.title}")
     except aiogram.exceptions.TelegramBadRequest:
-        print(f"user {message.from_user.id} could be banned, but bot has no access to ban in group {message.chat.id}")
+        logging.warning(
+            f"user {message.from_user.id} could be banned, but bot has no access to ban in group {message.chat.id}"
+        )

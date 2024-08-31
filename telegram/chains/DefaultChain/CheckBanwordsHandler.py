@@ -1,5 +1,6 @@
 import os
 import re
+import logging
 
 from dotenv import load_dotenv
 
@@ -21,6 +22,7 @@ class CheckBanwordsHandler(AbstractHandler):
             message.is_trusted = False
             message.execute_middleware = True
             message.execute = warning(message.message)
+            logging.info("CheckBanwordsHandler handler worked now")
             return message
 
         return await super().handle(message)

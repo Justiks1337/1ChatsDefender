@@ -1,3 +1,4 @@
+import logging
 from typing import List, Dict
 import time
 
@@ -12,7 +13,7 @@ class IsAdminHandler(AbstractHandler):
 
     async def handle(self, message: Message) -> Message:
         if message.message.from_user.id in await ChatAdminsFabric().get(message.message.chat.id):
-            message.is_trusted = False
+            logging.debug("IsAdminHandler is worked now")
             return message
         return await super().handle(message)
 
