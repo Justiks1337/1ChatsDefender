@@ -2,7 +2,6 @@ import logging
 
 from telegram.Message import Message
 from utils import AbstractHandler
-from telegram.punishments import delete
 
 
 class IsGroupHandler(AbstractHandler):
