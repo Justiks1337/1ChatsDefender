@@ -64,7 +64,7 @@ class APIClient(Singleton, APIClientInterface):
         async with ClientSession() as session:
             async with session.post('https://gigachat.devices.sberbank.ru/api/v1/chat/completions',
                                     data=json_lib.dumps({"model": "GigaChat", 'messages': [{"role": "system",
-                                                                                 "content": "я буду присылать тебе сообщения из чата, ты должен отвечать да или нет: да, если в сообщении есть заработок, нет если нет"},
+                                                                                 "content": "я буду присылать тебе сообщения из чата, ты должен отвечать да или нет: Если сообщение содержит предложение работы,  заработка или намек на интимный контент, отвечай 'да'. Если в тексте нет упоминания о заработке, работе или интиме, отвечай 'нет'."},
                                                                                 {"role": "user",
                                                                                  "content": text}],
                                           "n": 1, "stream": False, "max_tokens": 512,
