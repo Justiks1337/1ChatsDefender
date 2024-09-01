@@ -17,7 +17,7 @@ class DefaultChain(AbstractHandler):
         is_admin_handler = IsAdminHandler()
         check_banwords_handler = CheckBanwordsHandler()
 
-        is_join_message_handler.set_next(is_group_handler).set_next(message_has_text_handler).set_next(is_admin_handler).set_next(check_banwords_handler)
+        is_group_handler.set_next(is_join_message_handler).set_next(message_has_text_handler).set_next(is_admin_handler).set_next(check_banwords_handler)
 
         result = await is_join_message_handler.handle(message)
 

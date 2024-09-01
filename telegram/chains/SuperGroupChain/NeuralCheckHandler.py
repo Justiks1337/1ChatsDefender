@@ -7,7 +7,7 @@ import os
 from aiohttp import ClientSession
 from utils import AbstractHandler, Singleton
 from telegram.Message import Message
-from telegram.punishments import ban
+from telegram.punishments import warning
 
 
 class NeuralCheckHandler(AbstractHandler):
@@ -23,7 +23,7 @@ class NeuralCheckHandler(AbstractHandler):
         if await neural_client.check_message(message.message.text):
             message.is_trusted = False
             message.execute_middleware = True
-            message.execute = ban(message.message)
+            message.execute = warning(message.message)
             logging.info("NeuralCheckHandler worked now")
             return message
 

@@ -5,7 +5,7 @@ import aiosqlite
 from utils import AbstractHandler
 from telegram.Message import Message
 from utils.database.connection import DatabaseConnection
-from telegram.punishments import ban
+from telegram.punishments import warning
 
 
 class CheckInDatabaseHandler(AbstractHandler):
@@ -18,7 +18,7 @@ class CheckInDatabaseHandler(AbstractHandler):
         if await result_set.fetchone():
             message.is_trusted = False
             message.execute_middleware = True
-            message.execute = ban(message.message)
+            message.execute = warning(message.message)
             logging.info("CheckInDatabaseHandler is worked now")
             return message
 
