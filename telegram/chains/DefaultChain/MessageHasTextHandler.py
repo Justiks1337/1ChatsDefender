@@ -12,7 +12,7 @@ class MessageHasTextHandler(AbstractHandler):
 
     async def handle(self, message: Message) -> Message:
         if not message.message.text:
-            message.is_trusted = False
+            message.next_handler = False
             logging.debug("MessageHasTextHandler is working now")
             return message
 

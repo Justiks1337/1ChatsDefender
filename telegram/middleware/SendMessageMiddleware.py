@@ -20,6 +20,6 @@ class SendMessageMiddleware(MiddlewareInterface):
             .replace("{chat}", message.message.chat.title) \
             .replace("{message}", message.message.text)
 
-        await bot.send_message(message.message.chat.id, message_to_admins_chat)
+        await bot.send_message(cls.admins_chat_ids, message_to_admins_chat)
 
         return message

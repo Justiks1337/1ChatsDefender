@@ -18,6 +18,7 @@ class Message:
         self._execute = None
         self._is_trusted = True
         self._execute_middleware = False
+        self._next_handler = True
 
     @property
     def message(self):
@@ -46,3 +47,11 @@ class Message:
     @execute_middleware.setter
     def execute_middleware(self, value: bool):
         self._execute_middleware = value
+
+    @property
+    def next_handler(self):
+        return self._next_handler
+
+    @next_handler.setter
+    def next_handler(self, value):
+        self._next_handler = value

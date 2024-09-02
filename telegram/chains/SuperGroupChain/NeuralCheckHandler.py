@@ -71,7 +71,7 @@ class APIClient(Singleton, APIClientInterface):
                                           "repetition_penalty": 1, "update_interval": 0}),
                                     headers={"Authorization": f"Bearer {self.__access_token}",
                                              "Content-type": "application/json",
-                                             "Accept": "application/json"}) as response:
+                                             "Accept": "application/json"}, ssl=False) as response:
                 json = await response.json()
                 return "да" in json["choices"][0]["message"]["content"].lower()
 
@@ -88,7 +88,7 @@ class APIClient(Singleton, APIClientInterface):
                                              "Accept": "application/json",
                                              "RqUID": APIClient.rquid,
                                              "Authorization": APIClient.authorization},
-                                    data={"scope": "GIGACHAT_API_PERS"}) as response:
+                                    data={"scope": "GIGACHAT_API_PERS"}, ssl=False) as response:
                 json = await response.json()
                 self.__token_expires_at = json['expires_at']
                 self.__access_token = json['access_token']

@@ -21,7 +21,7 @@ class DefaultChain(AbstractHandler):
 
         result = await is_join_message_handler.handle(message)
 
-        if not result.is_trusted:
+        if not result.is_trusted or not result.next_handler:
             logging.info("Default chain handle a violation.")
             return result
 
