@@ -14,6 +14,7 @@ class IsAdminHandler(AbstractHandler):
     async def handle(self, message: Message) -> Message:
         if message.message.from_user.id in await ChatAdminsFabric().get(message.message.chat.id):
             logging.debug("IsAdminHandler is worked now")
+            message.next_handler = False
             return message
         return await super().handle(message)
 

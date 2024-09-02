@@ -24,7 +24,7 @@ class SuperGroupChain(AbstractHandler):
 
         result = await is_premium_handler.handle(message)
 
-        if not result.is_trusted:
+        if not result.is_trusted or not result.next_handler:
             logging.info("SuperGroupChain handle a violation!")
             return message
 
