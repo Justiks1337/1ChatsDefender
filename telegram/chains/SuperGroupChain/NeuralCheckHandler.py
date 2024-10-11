@@ -73,7 +73,11 @@ class APIClient(Singleton, APIClientInterface):
                                              "Content-type": "application/json",
                                              "Accept": "application/json"}, ssl=False) as response:
                 json = await response.json()
-                return "да" in json["choices"][0]["message"]["content"].lower()
+                try:
+                    return "да" in json["choices"][0]["message"]["content"].lower()
+                except KeyError:
+                    await self.__revoke_token()
+                    return await self.check_message(text)
 
     async def __revoke_token(self):
         """

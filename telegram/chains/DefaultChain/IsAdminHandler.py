@@ -6,7 +6,6 @@ from utils import AbstractHandler, Singleton
 
 from telegram.Message import Message
 from telegram.dispatcher import bot
-from telegram.punishments import delete
 
 
 class IsAdminHandler(AbstractHandler):
