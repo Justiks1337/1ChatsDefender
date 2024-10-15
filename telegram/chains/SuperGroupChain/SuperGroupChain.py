@@ -5,11 +5,13 @@ from telegram.Message import Message
 from telegram.chains.SuperGroupChain.CheckInDatabaseHandler import CheckInDatabaseHandler
 from telegram.chains.SuperGroupChain.NeuralCheckHandler import NeuralCheckHandler
 from telegram.chains.SuperGroupChain.IsPremiumHandler import IsPremiumHandler
+from telegram.chains.SuperGroupChain.HasPremiumEmojisHandler import HasPremiumEmojisHandler
+from telegram.chains.SuperGroupChain.ManySpacesHandler import ManySpacesHandler
 
 
 class SuperGroupChain(AbstractHandler):
 
-    whitelisted_chats = [-1001375992358, -4288058510, -1002184712714, -4520083042, -1002168533309]
+    whitelisted_chats = [-1001440778604, -1001375992358, -4288058510, -1002184712714, -4520083042, -1002168533309]
 
     async def handle(self, message: Message):
 
@@ -18,9 +20,14 @@ class SuperGroupChain(AbstractHandler):
 
         check_in_database_handler = CheckInDatabaseHandler()
         neural_check_handler = NeuralCheckHandler()
+        many_spaces_handler = ManySpacesHandler()
+        has_premium_emojis_handler = HasPremiumEmojisHandler()
         is_premium_handler = IsPremiumHandler()
 
-        is_premium_handler.set_next(check_in_database_handler).set_next(neural_check_handler)
+        is_premium_handler.set_next(has_premium_emojis_handler) \
+            .set_next(many_spaces_handler) \
+            .set_next(check_in_database_handler) \
+            .set_next(neural_check_handler)
 
         result = await is_premium_handler.handle(message)
 
