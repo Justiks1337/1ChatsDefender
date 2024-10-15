@@ -11,7 +11,7 @@ from telegram.chains.SuperGroupChain.ManySpacesHandler import ManySpacesHandler
 
 class SuperGroupChain(AbstractHandler):
 
-    whitelisted_chats = [-1001375992358, -4288058510, -1002184712714, -4520083042, -1002168533309]
+    whitelisted_chats = [-1001440778604, -1001375992358, -4288058510, -1002184712714, -4520083042, -1002168533309]
 
     async def handle(self, message: Message):
 
