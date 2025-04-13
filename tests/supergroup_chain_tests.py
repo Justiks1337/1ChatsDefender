@@ -1,10 +1,9 @@
 import unittest
-from unittest import TestSuite, TestCase
 
 from telegram.Message import Message
 from tests.test_message_object import TestAiogramMessage
-from telegram.chains.SuperGroupChain.ManySpacesHandler import ManySpacesHandler
-from telegram.chains.SuperGroupChain.HasPremiumEmojisHandler import HasPremiumEmojisHandler
+from telegram.handlers.ManySpacesHandler import ManySpacesHandler
+from telegram.handlers.HasPremiumEmojisHandler import HasPremiumEmojisHandler
 
 
 class ManySpacesHandlerTest(unittest.IsolatedAsyncioTestCase):

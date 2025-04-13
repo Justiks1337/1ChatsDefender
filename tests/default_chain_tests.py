@@ -1,12 +1,12 @@
 import unittest
 
 from telegram.Message import Message
-from telegram.chains.DefaultChain.DefaultChain import DefaultChain
-from telegram.chains.DefaultChain.IsGroupHandler import IsGroupHandler
-from telegram.chains.DefaultChain.MessageHasTextHandler import MessageHasTextHandler
-from telegram.chains.DefaultChain.IsAdminHandler import IsAdminHandler
-from telegram.chains.DefaultChain.IsJoinMessageHandler import IsJoinMessageHandler
-from telegram.chains.DefaultChain.CheckBanwordsHandler import CheckBanwordsHandler
+from telegram.chains.DefaultChain import DefaultChain
+from telegram.handlers.IsGroupHandler import IsGroupHandler
+from telegram.handlers.MessageHasTextHandler import MessageHasTextHandler
+from telegram.handlers.IsAdminHandler import IsAdminHandler
+from telegram.handlers.IsJoinMessageHandler import IsJoinMessageHandler
+from telegram.handlers.CheckBanwordsHandler import CheckBanwordsHandler
 from tests.test_message_object import TestAiogramMessage
 from tests.test_handler import TestHandler
 

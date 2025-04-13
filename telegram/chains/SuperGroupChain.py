@@ -1,12 +1,14 @@
 import logging
+import os
 
 from utils import AbstractHandler
 from telegram.Message import Message
-from telegram.chains.SuperGroupChain.CheckInDatabaseHandler import CheckInDatabaseHandler
-from telegram.chains.SuperGroupChain.NeuralCheckHandler import NeuralCheckHandler
-from telegram.chains.SuperGroupChain.IsPremiumHandler import IsPremiumHandler
-from telegram.chains.SuperGroupChain.HasPremiumEmojisHandler import HasPremiumEmojisHandler
-from telegram.chains.SuperGroupChain.ManySpacesHandler import ManySpacesHandler
+from telegram.handlers.CheckInDatabaseHandler import CheckInDatabaseHandler
+from telegram.handlers.NeuralCheckHandler import NeuralCheckHandler
+from telegram.handlers.IsPremiumHandler import IsPremiumHandler
+from telegram.handlers.HasPremiumEmojisHandler import HasPremiumEmojisHandler
+from telegram.handlers.ManySpacesHandler import ManySpacesHandler
+from telegram.handlers.CheckBanwordsHandler import CheckBanwordsHandler
 
 
 class SuperGroupChain(AbstractHandler):
@@ -23,11 +25,15 @@ class SuperGroupChain(AbstractHandler):
         many_spaces_handler = ManySpacesHandler()
         has_premium_emojis_handler = HasPremiumEmojisHandler()
         is_premium_handler = IsPremiumHandler()
+        ban_words_check_handler = CheckBanwordsHandler(text=os.getenv("SUPERGROUP_BANWORD_REGEX"))
 
-        is_premium_handler.set_next(has_premium_emojis_handler) \
-            .set_next(many_spaces_handler) \
-            .set_next(check_in_database_handler) \
+        (
+            is_premium_handler.set_next(has_premium_emojis_handler)
+            .set_next(many_spaces_handler)
+            .set_next(ban_words_check_handler)
+            .set_next(check_in_database_handler)
             .set_next(neural_check_handler)
+        )
 
         result = await is_premium_handler.handle(message)
 
