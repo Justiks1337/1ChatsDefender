@@ -17,7 +17,6 @@ class CheckBanwordsHandler(AbstractHandler):
     def __init__(self, text=os.getenv("BANWORD_REGEX")):
         self.text = text
 
-
     async def handle(self, message: Message):
 
         find = re.search(self.text, message.message.text, re.IGNORECASE)

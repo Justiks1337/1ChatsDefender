@@ -13,6 +13,7 @@ from telegram.handlers.HasInlineKeyboardMarkupHandler import HasInlineKeyboardMa
 from telegram.handlers.IsTrustedMemberHandler import IsTrustedMemberHandler
 from telegram.handlers.UpperCaseHandler import UpperCaseHandler
 
+
 class SuperGroupChain(AbstractHandler):
 
     whitelisted_chats = [-1001440778604, -1001375992358, -4288058510, -1002184712714, -4520083042, -1002168533309, -1002590134862]
