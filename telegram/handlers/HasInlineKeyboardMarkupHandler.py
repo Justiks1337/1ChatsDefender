@@ -18,6 +18,6 @@ class HasInlineKeyboardMarkupHandler(AbstractHandler):
 
         message.is_trusted = False
         message.execute_middleware = True
-        message.execute = ban(message)
+        message.execute = ban(message.message)
         logging.debug("HasInlineKeyboardMarkupHandler is work now!")
         return message

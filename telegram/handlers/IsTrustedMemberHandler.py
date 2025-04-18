@@ -1,6 +1,7 @@
 import time
 import os
 from typing import Optional
+import logging
 
 from telegram.Message import Message
 from utils.patterns.chain_of_responsibility import AbstractHandler
@@ -22,7 +23,8 @@ class IsTrustedMemberHandler(AbstractHandler):
 
         if joined_time is None:
             await self.__add_new_member(user_id)
-        if joined_time + self.IS_TRUSTED_MEMBER < time.time():
+        elif joined_time + self.IS_TRUSTED_MEMBER < time.time():
+            logging.info("IsTrustedMemberHandler worked now")
             return message
 
         return await super().handle(message)
