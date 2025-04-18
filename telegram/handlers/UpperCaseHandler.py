@@ -23,7 +23,7 @@ class UpperCaseHandler(AbstractHandler):
 
         if self.__check(message.message.text):
             message.is_trusted = False
-            message.execute = warning(message)
+            message.execute = warning(message.message)
             logging.info("Upper Case Handler is worked now")
             return message
 
