@@ -66,7 +66,8 @@ class UpperCaseHandler(AbstractHandler):
                 lowercased_symbols += 1
 
             # Обратная проверка снизу, на 1-self.CAPS_PERCENTAGE lowercased symbols
-            if lowercased_symbols / len_of_message >= 1 - self.CAPS_PERCENTAGE: return False
+            if lowercased_symbols / len_of_message >= 1 - self.CAPS_PERCENTAGE:
+                return False
 
         for symbol in third_part:
             if symbol.isupper():
@@ -75,8 +76,10 @@ class UpperCaseHandler(AbstractHandler):
                 lowercased_symbols += 1
 
             # Обратная проверка снизу, на 1-self.CAPS_PERCENTAGE lowercased symbols
-            if lowercased_symbols / len_of_message >= 1 - self.CAPS_PERCENTAGE: return False
-            if uppercased_symbols / len_of_message >= self.CAPS_PERCENTAGE: return True
+            if lowercased_symbols / len_of_message >= 1 - self.CAPS_PERCENTAGE:
+                return False
+            if uppercased_symbols / len_of_message >= self.CAPS_PERCENTAGE:
+                return True
 
         # На всякий случай, если произойдет исход когда не одно из условий не сработало (по идее не возможно)
         return False

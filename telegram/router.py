@@ -49,8 +49,6 @@ class Router(Singleton):
         if not message.execute_middleware:
             return message
 
-        index = 0  # cursor
-
         for middleware in middlewares:
             message = await middleware.execute(message)
 

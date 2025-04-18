@@ -114,5 +114,3 @@ class CheckBanwordsHandlerTest(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(r.is_trusted)
         r2 = await CheckBanwordsHandler().handle(message)
         self.assertFalse(r2.is_trusted)
-
-
