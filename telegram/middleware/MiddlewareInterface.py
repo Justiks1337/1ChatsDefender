@@ -7,4 +7,3 @@ class MiddlewareInterface(ABC):
     @abstractmethod
     async def execute(cls, message):
         pass
-

@@ -1,5 +1,4 @@
 import asyncio
-import datetime
 
 from dotenv import load_dotenv
 
@@ -16,7 +15,7 @@ async def main():
     await database_connection.get_connection()  # Database is Singleton, that's why I call this method here
     Router()  # router - singleton. This line execute initial Router method
 
-    import telegram.handlers  # load handlers
+    import telegram.handler  # load handlers
     await dp.start_polling(telegram.dispatcher.bot)
 
 

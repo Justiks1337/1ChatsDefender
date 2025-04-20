@@ -32,7 +32,7 @@ async def warning(message: aiogram.types.Message):
     await database_connection.execute("""
             INSERT INTO users (user_id, warnings)
             VALUES (?, 1)
-            ON CONFLICT(user_id) DO 
+            ON CONFLICT(user_id) DO
             UPDATE SET warnings=warnings+1""", (
         message.from_user.id,
     ))

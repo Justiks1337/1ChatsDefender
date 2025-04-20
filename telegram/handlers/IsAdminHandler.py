@@ -19,7 +19,6 @@ class IsAdminHandler(AbstractHandler):
 
 
 class AdministratorsCache:
-    
     """This class instances implements administrators cache"""
 
     INSTANCE_LIFE_TIME = 86400
@@ -36,7 +35,6 @@ class AdministratorsCache:
 
 
 class ChatAdminsFabric(Singleton):
-
     """
     ChatAdminsFabric
 

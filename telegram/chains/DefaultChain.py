@@ -2,11 +2,11 @@ import logging
 
 from utils import AbstractHandler
 from telegram.Message import Message
-from telegram.chains.DefaultChain.IsJoinMessageHandler import IsJoinMessageHandler
-from telegram.chains.DefaultChain.IsAdminHandler import IsAdminHandler
-from telegram.chains.DefaultChain.CheckBanwordsHandler import CheckBanwordsHandler
-from telegram.chains.DefaultChain.MessageHasTextHandler import MessageHasTextHandler
-from telegram.chains.DefaultChain.IsGroupHandler import IsGroupHandler
+from telegram.handlers.IsJoinMessageHandler import IsJoinMessageHandler
+from telegram.handlers.IsAdminHandler import IsAdminHandler
+from telegram.handlers.CheckBanwordsHandler import CheckBanwordsHandler
+from telegram.handlers.MessageHasTextHandler import MessageHasTextHandler
+from telegram.handlers.IsGroupHandler import IsGroupHandler
 
 
 class DefaultChain(AbstractHandler):

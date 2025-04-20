@@ -25,6 +25,11 @@ class DatabaseConnection(Singleton):
             warnings INTEGER
         )""")
 
+        await self.connect.execute("""CREATE TABLE IF NOT EXISTS member_joins (
+            user_id INTEGER PRIMARY KEY,
+            joined_at INTEGER
+        )""")
+
     async def get_connection(self):
         self.connect = await aiosqlite.connect(os.getenv("DATABASE_NAME"))
         await self.create_tables()

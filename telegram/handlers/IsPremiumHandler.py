@@ -12,4 +12,3 @@ class IsPremiumHandler(AbstractHandler):
             return message
 
         return await super().handle(message)
-
