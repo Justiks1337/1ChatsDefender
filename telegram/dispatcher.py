@@ -3,6 +3,7 @@ the dispatcher instance, to avoid circular imports in future
 """
 
 import os
+import sys
 
 from aiogram import Dispatcher, Bot
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -10,5 +11,12 @@ from dotenv import load_dotenv
 
 load_dotenv(".env.telegram")
 
-dp = Dispatcher(storage=MemoryStorage())
-bot = Bot(os.getenv("BOT_TOKEN"))
+
+# Костыль, проверяет запущен ли скрипт в unittest контексте
+# TODO: Внимание, тесты должны быть изолированы, и это нужно исправить!
+if "unittest" not in sys.modules:
+    dp = Dispatcher(storage=MemoryStorage())
+    bot = Bot(os.getenv("BOT_TOKEN"))
+else:
+    dp = None
+    bot = None
