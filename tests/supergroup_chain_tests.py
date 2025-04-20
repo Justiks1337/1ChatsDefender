@@ -1,10 +1,10 @@
 import unittest
-from unittest import TestSuite, TestCase
 
 from telegram.Message import Message
 from tests.test_message_object import TestAiogramMessage
-from telegram.chains.SuperGroupChain.ManySpacesHandler import ManySpacesHandler
-from telegram.chains.SuperGroupChain.HasPremiumEmojisHandler import HasPremiumEmojisHandler
+from telegram.handlers.ManySpacesHandler import ManySpacesHandler
+from telegram.handlers.HasPremiumEmojisHandler import HasPremiumEmojisHandler
+from telegram.handlers.UpperCaseHandler import UpperCaseHandler
 
 
 class ManySpacesHandlerTest(unittest.IsolatedAsyncioTestCase):
@@ -28,4 +28,17 @@ class HasPremiumEmojisHandlerTest(unittest.IsolatedAsyncioTestCase):
     async def test_with_triggers(self):
         message = Message(TestAiogramMessage(text="🐷🐷🐷🐷🐷🐷🐷🐷 амъъаъаъъаъъаъаххахахахахаха свинохряк :HEART:"))
         r2 = await HasPremiumEmojisHandler().handle(message)
+        self.assertFalse(r2.is_trusted)
+
+
+class UpperCaseHandlerTest(unittest.IsolatedAsyncioTestCase):
+
+    async def test_without_triggers(self):
+        message = Message(TestAiogramMessage(text="ААААаааааааААААааааааааааааааааааааа"))
+        r2 = await UpperCaseHandler().handle(message)
+        self.assertTrue(r2.is_trusted)
+
+    async def test_with_triggers(self):
+        message = Message(TestAiogramMessage(text="ААААААААААААААААААААААААААААААААААААААААААааааааа"))
+        r2 = await UpperCaseHandler().handle(message)
         self.assertFalse(r2.is_trusted)
