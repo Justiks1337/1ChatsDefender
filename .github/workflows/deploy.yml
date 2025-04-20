@@ -16,6 +16,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Create env files
+        env:
+          BOT_TOKEN: ${{secrets.BOT_TOKEN}}
+          GIGACHAT_API_AUTHORIZATION: ${{secrets.GIGACHAT_API_AUTHORIZATION}}
+          RQUID: ${{secrets.GIGACHAT_RQUID}}
+        run: |
+          echo "GIGACHAT_API_AUTHORIZATION=$GIGACHAT_API_AUTHORIZATION" >> .env.gigachat"
+          echo "RQUID=$RQUID" >> .env.gigachat
+          echo "BOT_TOKEN=$BOT_TOKEN" >> .env.telegram
+
       - name: Copy archive
         run: |
           zip -r 1chatsdefender.zip .

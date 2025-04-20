@@ -8,6 +8,10 @@ from aiohttp import ClientSession
 from utils import AbstractHandler, Singleton
 from telegram.Message import Message
 from telegram.punishments import warning
+from dotenv import load_dotenv
+
+
+load_dotenv(".env.gigachat")
 
 
 class NeuralCheckHandler(AbstractHandler):
