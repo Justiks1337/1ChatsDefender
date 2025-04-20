@@ -51,7 +51,8 @@ jobs:
           username: ${{secrets.SSH_USER}}
           script: |
             set -e
-            rm -rf ${{ vars.DEPLOY_PATH }}/*
+            rm -rf ${{ vars.DEPLOY_PATH }}
+            mkdir ${{ vars.DEPLOY_PATH }}
             mv ${{ vars.ARCHIVE_NAME }} ${{ vars.DEPLOY_PATH }}
             cd ${{ vars.DEPLOY_PATH }}
             unzip ${{ vars.ARCHIVE_NAME }}
