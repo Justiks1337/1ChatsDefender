@@ -2,6 +2,32 @@ name: deploy
 
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check release
+        uses: .github/workflows/build.yml
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy archive
+        run: |
+          zip -r 1chatsdefender.zip .
+          ls -lh *.zip
+          install -Dm 400 <(echo "$SSH_KNOWN_HOSTS") ~/.ssh/known_hosts
+          install -Dm 400 <(echo "$SSH_DEPLOY_KEY") deploy_key
+          scp -i deploy_key -P "$SSH_DEPLOY_PORT" 1chatsdefender.zip "$SSH_DEPLOY_TARGET"
+        shell: bash
+        env:
+          SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
+          $SSH_DEPLOY_KEY: ${{secrets.SSH_DEPLOY_KEY}}
+          $SSH_DEPLOY_PORT: ${{secrets.SSH_DEPLOY_PORT}}
+          $SSH_DEPLOY_TARGET: ${{secrets.SSH_DEPLOY_TARGET}}
+
 
