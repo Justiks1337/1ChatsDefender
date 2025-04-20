@@ -1,18 +1,18 @@
 name: deploy
 
-
 on:
-  workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
+  workflow_dispatch:
 
 jobs:
   build:
+    uses: ./.github/workflows/build.yml
+
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Check release
-        uses: .github/workflows/build.yml
-
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -26,8 +26,6 @@ jobs:
         shell: bash
         env:
           SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
-          $SSH_DEPLOY_KEY: ${{secrets.SSH_DEPLOY_KEY}}
-          $SSH_DEPLOY_PORT: ${{secrets.SSH_DEPLOY_PORT}}
-          $SSH_DEPLOY_TARGET: ${{secrets.SSH_DEPLOY_TARGET}}
-
-
+          SSH_DEPLOY_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+          SSH_DEPLOY_PORT: ${{secrets.SSH_DEPLOY_PORT}}
+          SSH_DEPLOY_TARGET: ${{secrets.SSH_DEPLOY_TARGET}}
