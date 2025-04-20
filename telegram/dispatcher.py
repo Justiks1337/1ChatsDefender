@@ -14,7 +14,7 @@ load_dotenv(".env.telegram")
 
 # Костыль, проверяет запущен ли скрипт в unittest контексте
 # TODO: Внимание, тесты должны быть изолированы, и это нужно исправить!
-if "unittest" not in sys.modules:
+if not getattr(sys, "_called_from_test", False):
     dp = Dispatcher(storage=MemoryStorage())
     bot = Bot(os.getenv("BOT_TOKEN"))
 else:

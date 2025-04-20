@@ -22,7 +22,7 @@ jobs:
           GIGACHAT_API_AUTHORIZATION: ${{secrets.GIGACHAT_API_AUTHORIZATION}}
           RQUID: ${{secrets.GIGACHAT_RQUID}}
         run: |
-          echo "GIGACHAT_API_AUTHORIZATION=$GIGACHAT_API_AUTHORIZATION" >> .env.gigachat"
+          echo "GIGACHAT_API_AUTHORIZATION=\"$GIGACHAT_API_AUTHORIZATION\"" >> .env.gigachat
           echo "RQUID=$RQUID" >> .env.gigachat
           echo "BOT_TOKEN=$BOT_TOKEN" >> .env.telegram
 
@@ -32,10 +32,28 @@ jobs:
           ls -lh *.zip
           install -Dm 400 <(echo "$SSH_KNOWN_HOSTS") ~/.ssh/known_hosts
           install -Dm 400 <(echo "$SSH_DEPLOY_KEY") deploy_key
-          scp -i deploy_key -P "$SSH_DEPLOY_PORT" 1chatsdefender.zip "$SSH_DEPLOY_TARGET"
+          scp -i deploy_key -P "$SSH_DEPLOY_PORT" 1chatsdefender.zip "$SSH_USER@$SSH_HOST:$ARCHIVE_NAME"
         shell: bash
         env:
           SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
           SSH_DEPLOY_KEY: ${{secrets.SSH_PRIVATE_KEY}}
           SSH_DEPLOY_PORT: ${{secrets.SSH_DEPLOY_PORT}}
-          SSH_DEPLOY_TARGET: ${{secrets.SSH_DEPLOY_TARGET}}
+          SSH_USER: ${{secrets.SSH_USER}}
+          SSH_HOST: ${{secrets.SSH_HOST}}
+          ARCHIVE_NAME: ${{vars.ARCHIVE_NAME}}
+
+      - name: Unpack
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{secrets.SSH_HOST}}
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          port: ${{secrets.SSH_DEPLOY_PORT}}
+          username: ${{secrets.SSH_USER}}
+          script: |
+            set -e
+            rm -rf ${{ vars.DEPLOY_PATH }}/*
+            mv ${{ vars.ARCHIVE_NAME }} ${{ vars.DEPLOY_PATH }}
+            cd ${{ vars.DEPLOY_PATH }}
+            unzip ${{ vars.ARCHIVE_NAME }}
+            python3 -m venv venv
+            venv/bin/python3 -m pip install -r requirements.txt 
