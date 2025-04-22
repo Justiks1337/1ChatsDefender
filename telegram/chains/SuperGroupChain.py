@@ -34,13 +34,13 @@ class SuperGroupChain(AbstractHandler):
         is_uppercase_handler = UpperCaseHandler()
 
         (
-            is_premium_handler
-            .set_next(has_inline_keyboard_markup)
+            has_inline_keyboard_markup
             .set_next(is_trusted_member_handler)
             .set_next(has_premium_emojis_handler)
             .set_next(many_spaces_handler)
             .set_next(is_uppercase_handler)
             .set_next(ban_words_check_handler)
+            .set_next(is_premium_handler)
             .set_next(check_in_database_handler)
             .set_next(neural_check_handler)
         )
