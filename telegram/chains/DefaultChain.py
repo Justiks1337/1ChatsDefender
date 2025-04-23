@@ -7,19 +7,30 @@ from telegram.handlers.IsAdminHandler import IsAdminHandler
 from telegram.handlers.CheckBanwordsHandler import CheckBanwordsHandler
 from telegram.handlers.MessageHasTextHandler import MessageHasTextHandler
 from telegram.handlers.IsGroupHandler import IsGroupHandler
+from telegram.handlers.EmptyHandler import EmptyHandler
 
 
 class DefaultChain(AbstractHandler):
-    async def handle(self, message: Message):
+
+    def __init__(self):
+        self.first_handler = EmptyHandler()
         is_group_handler = IsGroupHandler()
         is_join_message_handler = IsJoinMessageHandler()
         message_has_text_handler = MessageHasTextHandler()
         is_admin_handler = IsAdminHandler()
         check_banwords_handler = CheckBanwordsHandler()
 
-        is_group_handler.set_next(is_join_message_handler).set_next(message_has_text_handler).set_next(is_admin_handler).set_next(check_banwords_handler)
+        (
+            self.first_handler
+            .set_next(is_group_handler
+                      .set_next(is_join_message_handler)
+                      .set_next(message_has_text_handler)
+                      .set_next(is_admin_handler)
+                      .set_next(check_banwords_handler))
+        )
 
-        result = await is_join_message_handler.handle(message)
+    async def handle(self, message: Message):
+        result = await self.first_handler.handle(message)
 
         if not result.is_trusted or not result.next_handler:
             logging.info("Default chain handle a violation.")
