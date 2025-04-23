@@ -12,17 +12,15 @@ from telegram.handlers.CheckBanwordsHandler import CheckBanwordsHandler
 from telegram.handlers.HasInlineKeyboardMarkupHandler import HasInlineKeyboardMarkupHandler
 from telegram.handlers.IsTrustedMemberHandler import IsTrustedMemberHandler
 from telegram.handlers.UpperCaseHandler import UpperCaseHandler
+from telegram.handlers.EmptyHandler import EmptyHandler
 
 
 class SuperGroupChain(AbstractHandler):
 
     whitelisted_chats = [-1001440778604, -1001375992358, -4288058510, -1002184712714, -4520083042, -1002168533309, -1002590134862]
 
-    async def handle(self, message: Message):
-
-        if message.message.chat.id not in SuperGroupChain.whitelisted_chats:
-            return await super().handle(message)
-
+    def __init__(self):
+        self.first_handler = EmptyHandler()
         check_in_database_handler = CheckInDatabaseHandler()
         neural_check_handler = NeuralCheckHandler()
         many_spaces_handler = ManySpacesHandler()
@@ -34,7 +32,8 @@ class SuperGroupChain(AbstractHandler):
         is_uppercase_handler = UpperCaseHandler()
 
         (
-            has_inline_keyboard_markup
+            self.first_handler
+            .set_next(has_inline_keyboard_markup)
             .set_next(is_trusted_member_handler)
             .set_next(has_premium_emojis_handler)
             .set_next(many_spaces_handler)
@@ -45,7 +44,12 @@ class SuperGroupChain(AbstractHandler):
             .set_next(neural_check_handler)
         )
 
-        result = await is_premium_handler.handle(message)
+    async def handle(self, message: Message):
+
+        if message.message.chat.id not in SuperGroupChain.whitelisted_chats:
+            return await super().handle(message)
+
+        result = await self.first_handler.handle(message)
 
         if not result.is_trusted or not result.next_handler:
             logging.info("SuperGroupChain handle a violation!")
