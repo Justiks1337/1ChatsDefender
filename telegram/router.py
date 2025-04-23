@@ -11,6 +11,12 @@ from telegram.chains.SuperGroupChain import SuperGroupChain
 
 class Router(Singleton):
 
+    def init(self):
+        self.default_chain = DefaultChain()
+        self.super_group_chain = SuperGroupChain()
+
+        self.default_chain.set_next(self.super_group_chain)
+
     async def to_route(self, message: AiogramMessage):
         """
         Start message validate
@@ -29,14 +35,8 @@ class Router(Singleton):
         :param message: telegram.Message.Message
         :return: validate message
         """
-        default_chain = DefaultChain()
-        super_group_chain = SuperGroupChain()
 
-        default_chain.set_next(super_group_chain)
-
-        message = await default_chain.handle(message)
-
-        return message
+        return await self.default_chain.handle(message)
 
     async def __execute_middleware(self, message):
         """
