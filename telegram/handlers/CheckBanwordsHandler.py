@@ -15,11 +15,11 @@ load_dotenv()
 class CheckBanwordsHandler(AbstractHandler):
 
     def __init__(self, text=os.getenv("BANWORD_REGEX")):
-        self.text = text
+        self.pattern = re.compile(text, re.IGNORECASE | re.UNICODE)
+        print(self.pattern)
 
     async def handle(self, message: Message):
-
-        find = re.search(self.text, message.message.text, re.IGNORECASE)
+        find = self.pattern.search(message.message.text)
 
         if find:
             message.is_trusted = False
