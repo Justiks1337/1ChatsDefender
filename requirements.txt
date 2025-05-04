@@ -7,7 +7,7 @@ aiosqlite==0.21.0
 annotated-types==0.7.0
 attrs==25.3.0
 cachetools==5.5.2
-certifi==2025.1.31
+certifi==2025.4.26
 emoji==2.14.1
 flake8==7.2.0
 frozenlist==1.6.0
