@@ -9,7 +9,7 @@ class MessageToDatabaseMiddleware(MiddlewareInterface):
         if not message.is_trusted:
             connect = DatabaseConnection().connect
 
-            await connect.execute("INSERT OR IGNORE INTO messages VALUES (?, ?, ?, ?, ?, ?, ?)", (
+            await connect.execute("INSERT OR IGNORE INTO messages VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (
                 message.message.text,
                 message.message.from_user.id,
                 message.message.date,
