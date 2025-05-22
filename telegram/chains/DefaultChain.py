@@ -22,11 +22,11 @@ class DefaultChain(AbstractHandler):
 
         (
             self.first_handler
-            .set_next(is_group_handler
-                      .set_next(is_join_message_handler)
-                      .set_next(message_has_text_handler)
-                      .set_next(is_admin_handler)
-                      .set_next(check_banwords_handler))
+            .set_next(is_group_handler)
+            .set_next(is_join_message_handler)
+            .set_next(message_has_text_handler)
+            .set_next(is_admin_handler)
+            .set_next(check_banwords_handler)
         )
 
     async def handle(self, message: Message):
