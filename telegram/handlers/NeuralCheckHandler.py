@@ -1,30 +1,34 @@
 import logging
 from abc import ABC, abstractmethod
-import json as json_lib
-import time
+import joblib
 import os
+import re
 
-from aiohttp import ClientSession
+import pymorphy3
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
 from utils import AbstractHandler, Singleton
 from telegram.Message import Message
 from telegram.punishments import warning
 from dotenv import load_dotenv
 
 
-load_dotenv(".env.gigachat")
+load_dotenv()
 
 
 class NeuralCheckHandler(AbstractHandler):
 
     async def handle(self, message: Message):
-        neural_client = APIClient()
+        neural_client = AIClient()
 
         # Я не хочу тратить токены в нейронке на маленькие сообщения. И писать отдельный хендлер под это не хочу. И вообще комментарий переводить на английский тоже лень
-        if len(message.message.text.split(" ")) < 10:
+        if len(message.message.text.split(" ")) < 7:
             logging.debug("NeuralCheckHandler ignore message, because it len < 10")
             return await super().handle(message)
 
-        if await neural_client.check_message(message.message.text):
+        if neural_client.check_message(message.message.text):
             message.is_trusted = False
             message.execute_middleware = True
             message.execute = warning(message.message)
@@ -34,7 +38,7 @@ class NeuralCheckHandler(AbstractHandler):
         return await super().handle(message)
 
 
-class APIClientInterface(ABC):
+class AIClientInterface(ABC):
     @abstractmethod
     def init(self, *args, **kwargs):
         pass
@@ -44,17 +48,32 @@ class APIClientInterface(ABC):
         pass
 
 
-class APIClient(Singleton, APIClientInterface):
-    chat_url = "https://gigachat.devices.sberbank.ru/api/v1/chat/completions"
-    revoke_token_url = 'https://ngw.devices.sberbank.ru:9443/api/v2/oauth'
-    rquid = os.getenv("RQUID")
-    authorization = os.getenv("GIGACHAT_API_AUTHORIZATION")
+class AIClient(Singleton, AIClientInterface):
+    """
+    HIGH RESOURCES CLASS! LOAD THIS IN main.py!
+
+    tf-idf model for messages
+    """
 
     def init(self, *args, **kwargs):
-        self.__token_expires_at = 0
-        self.__access_token = ""
 
-    async def check_message(self, text: str) -> bool:
+        # download filters
+        nltk.download('stopwords')
+        nltk.download('punkt_tab')
+        nltk.download('punkt')
+
+        # WARNING! HIGH RESOURCES OPERATIONS!
+        self.__morph = pymorphy3.MorphAnalyzer()
+        self.__model = joblib.load(os.getenv('MODEL_PATH'))
+        self.__tfidf = joblib.load(os.getenv('TFIDF_PATH'))
+
+        # uses in __clear_message for remove all special symbols
+        self.__pattern = re.compile(r"[^a-zA-Zа-яА-Я0-9\s]")
+
+        # stop_words
+        self.__stop_words = set(stopwords.words('russian'))
+
+    def check_message(self, text: str) -> bool:
         """
         Validate message using neural network API client
 
@@ -62,41 +81,49 @@ class APIClient(Singleton, APIClientInterface):
         :return: bool. True if message not valid, else False
         """
 
-        if time.time() >= self.__token_expires_at:
-            await self.__revoke_token()
+        tfidf_message = self.__tfidf.transform([self.__clear_message(text)])
 
-        async with ClientSession() as session:
-            async with session.post('https://gigachat.devices.sberbank.ru/api/v1/chat/completions',
-                                    data=json_lib.dumps({"model": "GigaChat", 'messages': [{"role": "system",
-                                                                                            "content": "я буду присылать тебе сообщения из чата, ты должен отвечать да или нет: Если сообщение содержит предложение работы,  заработка или намек на интимный контент, отвечай 'да'. Если в тексте нет упоминания о заработке, работе или интиме, отвечай 'нет'."},
-                                                                                           {"role": "user",
-                                                                                            "content": text}],
-                                                         "n": 1, "stream": False, "max_tokens": 512,
-                                                         "repetition_penalty": 1, "update_interval": 0}),
-                                    headers={"Authorization": f"Bearer {self.__access_token}",
-                                             "Content-type": "application/json",
-                                             "Accept": "application/json"}, ssl=False) as response:
-                json = await response.json()
-                try:
-                    return "да" in json["choices"][0]["message"]["content"].lower()
-                except KeyError:
-                    await self.__revoke_token()
-                    return await self.check_message(text)
+        result = self.__model.predict(tfidf_message)[0]
 
-    async def __revoke_token(self):
+        # result can be "spam" or "true"
+        return result == "spam"
+
+    def __lemmatize(self, text):
         """
-        Revoke authtoken, if it expired
-
-        :return: None
+        Лемматизация текста - приведение слов к единой форме. Это требуется для удаления лишнего шума.
+        :param text: Text of message
+        :return: лемматизированный текст
         """
+        lemmatized_words = [self.__morph.parse(word)[0].normal_form for word in text.split()]
+        return " ".join(lemmatized_words)
 
-        async with ClientSession() as session:
-            async with session.post('https://ngw.devices.sberbank.ru:9443/api/v2/oauth',
-                                    headers={"Content-type": "application/x-www-form-urlencoded",
-                                             "Accept": "application/json",
-                                             "RqUID": APIClient.rquid,
-                                             "Authorization": APIClient.authorization},
-                                    data={"scope": "GIGACHAT_API_PERS"}, ssl=False) as response:
-                json = await response.json()
-                self.__token_expires_at = json['expires_at']
-                self.__access_token = json['access_token']
+    def __remove_stop_words(self, text):
+        """
+        Стоп слова это союзы, местоимения, слова не имеющие смысла и прочие.
+        Удаление стоп слов приводит к уменьшению шума в модели
+        :param text:
+        :return:
+        """
+        words = word_tokenize(text, language='russian')
+        filtered_words = [word for word in words if word.lower() not in self.__stop_words]
+        return ' '.join(filtered_words)
+
+    def __clear_message(self, text: str) -> str:
+        """clear message process before checking"""
+
+        # text to lower
+        text = text.lower()
+
+        # нормализация, приводим все ё к е, чтобы токенов в tf-idf было меньше
+        text = text.replace('ё', 'е')
+
+        # remove all special symbols
+        text = self.__pattern.sub('', text)
+
+        # remove stop words
+        text = self.__remove_stop_words(text)
+
+        # lemmatize words
+        text = self.__lemmatize(text)
+
+        return text

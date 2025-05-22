@@ -7,6 +7,7 @@ from telegram.Message import Message
 from telegram.punishments import warning
 
 
+# TODO: rewrite with message entities
 class HasPremiumEmojisHandler(AbstractHandler):
     async def handle(self, message: Message):
 
