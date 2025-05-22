@@ -4,7 +4,8 @@ from telegram.Message import Message
 from telegram.chains.DefaultChain import DefaultChain
 from telegram.handlers.IsGroupHandler import IsGroupHandler
 from telegram.handlers.MessageHasTextHandler import MessageHasTextHandler
-from telegram.handlers.IsAdminHandler import IsAdminHandler, ChatAdminsFabric, AdministratorsCache
+from telegram.handlers.IsAdminHandler import IsAdminHandler
+from telegram.admin_management import AdministratorsCache, ChatAdminsFabric
 from telegram.handlers.IsJoinMessageHandler import IsJoinMessageHandler
 from telegram.handlers.CheckBanwordsHandler import CheckBanwordsHandler
 from tests.test_message_object import TestAiogramMessage
