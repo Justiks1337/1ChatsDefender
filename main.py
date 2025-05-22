@@ -17,7 +17,6 @@ async def main():
     Router()  # router - singleton. This line execute initial Router method
     AIClient()  # high resources task, process it before bot start
 
-
     import telegram.handler  # load handlers
     await dp.start_polling(telegram.dispatcher.bot)
 

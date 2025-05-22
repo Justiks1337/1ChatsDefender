@@ -97,7 +97,6 @@ class AIClient(Singleton, AIClientInterface):
         lemmatized_words = [self.__morph.parse(word)[0].normal_form for word in text.split()]
         return " ".join(lemmatized_words)
 
-
     def __remove_stop_words(self, text):
         """
         Стоп слова это союзы, местоимения, слова не имеющие смысла и прочие.
