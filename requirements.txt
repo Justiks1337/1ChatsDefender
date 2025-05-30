@@ -37,7 +37,7 @@ regex==2024.11.6
 rsa==4.9.1
 scikit-learn==1.6.1
 scipy==1.15.3
-setuptools==80.8.0
+setuptools==80.9.0
 Telethon==1.40.0
 threadpoolctl==3.6.0
 tqdm==4.67.1
