@@ -41,5 +41,5 @@ setuptools==80.9.0
 Telethon==1.40.0
 threadpoolctl==3.6.0
 tqdm==4.67.1
-typing_extensions==4.13.2
+typing_extensions==4.14.0
 yarl==1.20.0
