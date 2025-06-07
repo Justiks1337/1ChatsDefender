@@ -30,7 +30,7 @@ pydantic==2.11.5
 pydantic_core==2.33.2
 pyflakes==3.3.2
 pygame==2.6.1
-pymorphy3==2.0.3
+pymorphy3==2.0.4
 pymorphy3-dicts-ru==2.4.417150.4580142
 python-dotenv==1.1.0
 regex==2024.11.6
