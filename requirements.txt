@@ -36,7 +36,7 @@ python-dotenv==1.1.0
 regex==2024.11.6
 rsa==4.9.1
 scikit-learn==1.7.0
-scipy==1.15.3
+scipy==1.16.0
 setuptools==80.9.0
 Telethon==1.40.0
 threadpoolctl==3.6.0
