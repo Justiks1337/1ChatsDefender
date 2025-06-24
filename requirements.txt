@@ -32,7 +32,7 @@ pyflakes==3.3.2
 pygame==2.6.1
 pymorphy3==2.0.4
 pymorphy3-dicts-ru==2.4.417150.4580142
-python-dotenv==1.1.0
+python-dotenv==1.1.1
 regex==2024.11.6
 rsa==4.9.1
 scikit-learn==1.7.0
