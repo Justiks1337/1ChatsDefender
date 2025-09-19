@@ -2,6 +2,7 @@ import time
 
 from utils.patterns.singleton import Singleton
 
+
 class Counter(Singleton):
     """
     Счетчик для вывода данных в /ping

@@ -27,4 +27,3 @@ class CounterMiddleware(MiddlewareInterface):
         counter.messages_handled += 1
 
         return message
-
