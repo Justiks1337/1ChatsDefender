@@ -1,4 +1,6 @@
 import logging
+import datetime
+import time
 
 from aiogram.filters.command import Command
 from aiogram.types import Message
@@ -7,6 +9,7 @@ from telegram.admin_management import ChatAdminsFabric
 from telegram.punishments import ban
 from telegram.dispatcher import dp
 from telegram.router import Router
+from telegram.Counter import Counter
 from utils.database.connection import DatabaseConnection
 
 
@@ -46,6 +49,42 @@ async def ban_command_handler(message: Message):
 
     await connect.commit()
 
+
+@dp.message(Command("ping"))
+async def ping_command_handler(message: Message):
+    """
+    /ping command handler (cosmetic)
+    :param message: aiogram Message
+    :return: None
+    """
+    counter = Counter()
+
+    total_seconds = int(time.time() - counter.start_time)
+
+    days = total_seconds // 86400
+    hours = (total_seconds % 86400) // 3600
+    minutes = (total_seconds % 3600) // 60
+    seconds = total_seconds % 60
+
+    parts = []
+    if days > 0:
+        parts.append(f"{days} д")
+    if hours > 0:
+        parts.append(f"{hours} ч")
+    if minutes > 0:
+        parts.append(f"{minutes} мин")
+    if seconds > 0 or not parts:
+        parts.append(f"{seconds} сек")
+
+    uptime = " ".join(parts)
+
+    message_text = ("🟢 Статус бота - работает \n\n"
+                    f"Uptime: {uptime}\n"
+                    f"Удалено сообщений: {counter.messages_deleted}\n"
+                    f"Просмотрено сообщений {counter.messages_handled}\n\n"
+                    f"Мяу")
+
+    await message.answer(message_text)
 
 @dp.message()
 async def main_handler(message: Message):

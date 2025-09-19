@@ -6,6 +6,7 @@ from telegram.dispatcher import dp
 from utils import DatabaseConnection
 from telegram.router import Router
 from telegram.handlers.NeuralCheckHandler import AIClient
+from telegram.Counter import Counter
 
 load_dotenv()
 
@@ -14,8 +15,9 @@ async def main():
     database_connection = DatabaseConnection()
     await database_connection.get_connection()  # Database is Singleton, that's why I call this method here
 
-    Router()  # router - singleton. This line execute initial Router method
+    Router()  # router - singleton. This line executes initial Router method
     AIClient()  # high resources task, process it before bot start
+    Counter() # Is singleton. Init this for counter-start
 
     import telegram.handler  # load handlers
     await dp.start_polling(telegram.dispatcher.bot)
