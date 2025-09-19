@@ -86,6 +86,7 @@ async def ping_command_handler(message: Message):
 
     await message.answer(message_text)
 
+
 @dp.message()
 async def main_handler(message: Message):
     logging.debug(f"handle a message - {message.text}")
