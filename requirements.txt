@@ -14,7 +14,7 @@ emoji==2.15.0
 flake8==7.3.0
 frozenlist==1.8.0
 idna==3.11
-joblib==1.5.2
+joblib==1.5.3
 magic-filter==1.0.12
 mccabe==0.7.0
 multidict==6.7.0
