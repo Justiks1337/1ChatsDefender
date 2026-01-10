@@ -26,12 +26,10 @@ jobs:
       - name: Install sshuttle
         run: sudo apt-get update && sudo apt-get install -y sshuttle
 
-      - name: Setup SSH key
+      - name: Setup VPN SSH key
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.VPN_PRIVATE_KEY }}" > ~/.ssh/vpn_id_rsa
-          chmod 600 ~/.ssh/vpn_id_rsa
-          ssh-keyscan -H ${{ secrets.VPN_HOST }} >> ~/.ssh/known_hosts
+          install -Dm 400 <(echo ${{ VPN_HOST }}) ~/.ssh/known_hosts
+          install -Dm 400 <(echo ${{ VPN_PRIVATE_KEY }}) vpn_id_rsa
 
       - name: Start VPN via sshuttle
         run: |
