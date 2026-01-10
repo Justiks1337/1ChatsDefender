@@ -29,24 +29,20 @@ jobs:
       - name: Setup VPN SSH key and known_hosts
         run: |
           mkdir -p ~/.ssh
-          install -Dm 400 <(ssh-keyscan -H ${{ secrets.VPN_HOST }}) ~/.ssh/known_hosts
+          install -Dm 400 <(ssh-keyscan -p ${{ secrets.VPN_PORT }} -H ${{ secrets.VPN_HOST }}) ~/.ssh/known_hosts
           install -Dm 400 <(echo "${{ secrets.VPN_PRIVATE_KEY }}") ~/.ssh/vpn_id_rsa
 
       - name: Start VPN via sshuttle
         run: |
+          sshuttle -r ${{ secrets.VPN_USER }}@${{ secrets.VPN_HOST }}:${{ secrets.VPN_PORT }} \
+            --ssh-cmd "ssh -i ~/.ssh/vpn_id_rsa" 0.0.0.0/0
+
 
       - name: Check public IP
-        run: |
-          nohup sshuttle -r ${{ secrets.VPN_USER }}@${{ secrets.VPN_HOST }}:${{ secrets.VPN_PORT }} \
-            --ssh-cmd "ssh -i ~/.ssh/vpn_id_rsa" 0.0.0.0/0 &
-          curl https://ifconfig.me
+        run: curl https://ifconfig.me
 
       - name: Copy archive
         run: |
-          
-          nohup sshuttle -r ${{ secrets.VPN_USER }}@${{ secrets.VPN_HOST }}:${{ secrets.VPN_PORT }} \
-            --ssh-cmd "ssh -i ~/.ssh/vpn_id_rsa" 0.0.0.0/0 &
-          
           zip -r 1chatsdefender.zip .
           ls -lh *.zip
           install -Dm 400 <(echo "$SSH_KNOWN_HOSTS") ~/.ssh/known_hosts
