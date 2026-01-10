@@ -29,48 +29,55 @@ jobs:
       - name: Setup VPN SSH key and known_hosts
         run: |
           mkdir -p ~/.ssh
-          install -Dm 400 <(ssh-keyscan -p ${{ secrets.VPN_PORT }} -H ${{ secrets.VPN_HOST }}) ~/.ssh/known_hosts
-          install -Dm 400 <(echo ${{ secrets.VPN_PRIVATE_KEY }}) vpn_id_rsa
+          chmod 700 ~/.ssh
+          
+          # приватный ключ — ТОЛЬКО через printf
+          printf "%s" "${{ secrets.VPN_PRIVATE_KEY }}" > ~/.ssh/vpn_id_rsa
+          chmod 600 ~/.ssh/vpn_id_rsa
+          
+          # known_hosts с указанием порта
+          ssh-keyscan -p ${{ secrets.VPN_PORT }} -H ${{ secrets.VPN_HOST }} >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
 
-      - name: Start VPN via sshuttle
-        run: |
-          sshuttle -r ${{ secrets.VPN_USER }}@${{ secrets.VPN_HOST }}:${{ secrets.VPN_PORT }} \
-            --ssh-cmd "ssh -i vpn_id_rsa" 0.0.0.0/0
+          - name: Start VPN via sshuttle
+            run: |
+              sshuttle -r ${{ secrets.VPN_USER }}@${{ secrets.VPN_HOST }}:${{ secrets.VPN_PORT }} \
+                --ssh-cmd "ssh -i ~/.ssh/vpn_id_rsa" 0.0.0.0/0
 
 
-      - name: Check public IP
-        run: curl https://ifconfig.me
+          - name: Check public IP
+            run: curl https://ifconfig.me
 
-      - name: Copy archive
-        run: |
-          zip -r 1chatsdefender.zip .
-          ls -lh *.zip
-          install -Dm 400 <(echo "$SSH_KNOWN_HOSTS") ~/.ssh/known_hosts
-          install -Dm 400 <(echo "$SSH_DEPLOY_KEY") deploy_key
-          scp -i deploy_key -P "$SSH_DEPLOY_PORT" 1chatsdefender.zip "$SSH_USER@$SSH_HOST:$ARCHIVE_NAME"
-        shell: bash
-        env:
-          SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
-          SSH_DEPLOY_KEY: ${{secrets.SSH_PRIVATE_KEY}}
-          SSH_DEPLOY_PORT: ${{secrets.SSH_DEPLOY_PORT}}
-          SSH_USER: ${{secrets.SSH_USER}}
-          SSH_HOST: ${{secrets.SSH_HOST}}
-          ARCHIVE_NAME: ${{vars.ARCHIVE_NAME}}
+          - name: Copy archive
+            run: |
+              zip -r 1chatsdefender.zip .
+              ls -lh *.zip
+              install -Dm 400 <(echo "$SSH_KNOWN_HOSTS") ~/.ssh/known_hosts
+              install -Dm 400 <(echo "$SSH_DEPLOY_KEY") deploy_key
+              scp -i deploy_key -P "$SSH_DEPLOY_PORT" 1chatsdefender.zip "$SSH_USER@$SSH_HOST:$ARCHIVE_NAME"
+            shell: bash
+            env:
+              SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
+              SSH_DEPLOY_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+              SSH_DEPLOY_PORT: ${{secrets.SSH_DEPLOY_PORT}}
+              SSH_USER: ${{secrets.SSH_USER}}
+              SSH_HOST: ${{secrets.SSH_HOST}}
+              ARCHIVE_NAME: ${{vars.ARCHIVE_NAME}}
 
-      - name: Unpack
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{secrets.SSH_HOST}}
-          key: ${{secrets.SSH_PRIVATE_KEY}}
-          port: ${{secrets.SSH_DEPLOY_PORT}}
-          username: ${{secrets.SSH_USER}}
-          script: |
-            set -e
-            rm -rf ${{ vars.DEPLOY_PATH }}
-            mkdir ${{ vars.DEPLOY_PATH }}
-            mv ${{ vars.ARCHIVE_NAME }} ${{ vars.DEPLOY_PATH }}
-            cd ${{ vars.DEPLOY_PATH }}
-            unzip ${{ vars.ARCHIVE_NAME }}
-            python3 -m venv venv
-            venv/bin/python3 -m pip install -r requirements.txt 
-            sudo systemctl restart 1chatsdefender
+          - name: Unpack
+            uses: appleboy/ssh-action@v1
+            with:
+              host: ${{secrets.SSH_HOST}}
+              key: ${{secrets.SSH_PRIVATE_KEY}}
+              port: ${{secrets.SSH_DEPLOY_PORT}}
+              username: ${{secrets.SSH_USER}}
+              script: |
+                set -e
+                rm -rf ${{ vars.DEPLOY_PATH }}
+                mkdir ${{ vars.DEPLOY_PATH }}
+                mv ${{ vars.ARCHIVE_NAME }} ${{ vars.DEPLOY_PATH }}
+                cd ${{ vars.DEPLOY_PATH }}
+                unzip ${{ vars.ARCHIVE_NAME }}
+                python3 -m venv venv
+                venv/bin/python3 -m pip install -r requirements.txt 
+                sudo systemctl restart 1chatsdefender
