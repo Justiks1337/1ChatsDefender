@@ -30,12 +30,12 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           install -Dm 400 <(ssh-keyscan -p ${{ secrets.VPN_PORT }} -H ${{ secrets.VPN_HOST }}) ~/.ssh/known_hosts
-          install -Dm 400 <(echo "${{ secrets.VPN_PRIVATE_KEY }}") ~/.ssh/vpn_id_rsa
+          install -Dm 400 <(echo ${{ secrets.VPN_PRIVATE_KEY }}) vpn_id_rsa
 
       - name: Start VPN via sshuttle
         run: |
           sshuttle -r ${{ secrets.VPN_USER }}@${{ secrets.VPN_HOST }}:${{ secrets.VPN_PORT }} \
-            --ssh-cmd "ssh -i ~/.ssh/vpn_id_rsa" 0.0.0.0/0
+            --ssh-cmd "ssh -i vpn_id_rsa" 0.0.0.0/0
 
 
       - name: Check public IP
