@@ -33,7 +33,7 @@ jobs:
 
       - name: Start VPN via sshuttle
         run: |
-          sshuttle -r ${{ secrets.VPN_USER }} @${{ secrets.VPN_HOST }}:${{ secrets.VPN_PORT }} --ssh-cmd "ssh -i vpn_id_rsa" 0.0.0.0/0
+          sshuttle -r ${{ secrets.VPN_USER }}@${{ secrets.VPN_HOST }}:${{ secrets.VPN_PORT }} --ssh-cmd "ssh -i vpn_id_rsa" 0.0.0.0/0
 
       - name: Check public IP
         run: curl https://ifconfig.me
