@@ -28,8 +28,8 @@ jobs:
 
       - name: Setup VPN SSH key
         run: |
-          install -Dm 400 <(echo ${{ VPN_HOST }}) ~/.ssh/known_hosts
-          install -Dm 400 <(echo ${{ VPN_PRIVATE_KEY }}) vpn_id_rsa
+          install -Dm 400 <(echo ${{ secrets.VPN_HOST }}) ~/.ssh/known_hosts
+          install -Dm 400 <(echo ${{ secrets.VPN_PRIVATE_KEY }}) vpn_id_rsa
 
       - name: Start VPN via sshuttle
         run: |
