@@ -22,6 +22,24 @@ jobs:
         run: |
           echo "BOT_TOKEN=$BOT_TOKEN" >> .env.telegram
 
+
+      - name: Install sshuttle
+        run: sudo apt-get update && sudo apt-get install -y sshuttle
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPN_PRIVATE_KEY }}" > ~/.ssh/vpn_id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VPN_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Start VPN via sshuttle
+        run: |
+          sshuttle -r ${{ secrets.VPN_USER }} @${{ secrets.VPN_HOST }}:${{ secrets.VPN_PORT }} --ssh-cmd "ssh -i vpn_id_rsa" 0.0.0.0/0
+
+      - name: Check public IP
+        run: curl https://ifconfig.me
+
       - name: Copy archive
         run: |
           zip -r 1chatsdefender.zip .
