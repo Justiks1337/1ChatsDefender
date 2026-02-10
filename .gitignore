@@ -1,0 +1,6 @@
+secrets.txt
+./venv
+./idea
+.env*
+database.db
+
