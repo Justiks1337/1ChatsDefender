@@ -17,7 +17,7 @@ idna==3.11
 joblib==1.5.3
 magic-filter==1.0.12
 mccabe==0.7.0
-multidict==6.7.0
+multidict==6.7.1
 nltk==3.9.2
 numpy==2.4.1
 packaging==25.0
