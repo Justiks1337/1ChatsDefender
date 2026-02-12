@@ -35,7 +35,7 @@ pymorphy3-dicts-ru==2.4.417150.4580142
 python-dotenv==1.2.1
 regex==2025.11.3
 rsa==4.9.1
-scikit-learn==1.7.2
+scikit-learn==1.8.0
 scipy==1.16.3
 setuptools==80.9.0
 Telethon==1.42.0
