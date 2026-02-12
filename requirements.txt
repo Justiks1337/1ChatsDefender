@@ -34,7 +34,7 @@ python-dotenv==1.2.1
 regex==2026.1.15
 scikit-learn==1.8.0
 scipy==1.17.0
-setuptools==80.9.0
+setuptools==80.10.2
 threadpoolctl==3.6.0
 tqdm==4.67.3
 typing-inspection==0.4.1
