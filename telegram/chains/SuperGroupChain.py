@@ -17,7 +17,7 @@ from telegram.handlers.EmptyHandler import EmptyHandler
 
 class SuperGroupChain(AbstractHandler):
 
-    whitelisted_chats = [-1001440778604, -1001375992358, -4288058510, -1002184712714, -4520083042, -1002168533309, -1002590134862]
+    whitelisted_chats = [-1001440778604, -1001375992358, -4288058510, -1002184712714, -4520083042, -1002168533309, -1002590134862, -1002090117492]
 
     def __init__(self):
         self.first_handler = EmptyHandler()
