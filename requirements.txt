@@ -37,6 +37,6 @@ scipy==1.17.0
 setuptools==82.0.0
 threadpoolctl==3.6.0
 tqdm==4.67.3
-typing-inspection==0.4.1
+typing-inspection==0.4.2
 typing_extensions==4.15.0
 yarl==1.22.0
