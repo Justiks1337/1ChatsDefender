@@ -13,6 +13,7 @@ from telegram.handlers.HasInlineKeyboardMarkupHandler import HasInlineKeyboardMa
 from telegram.handlers.IsTrustedMemberHandler import IsTrustedMemberHandler
 from telegram.handlers.UpperCaseHandler import UpperCaseHandler
 from telegram.handlers.EmptyHandler import EmptyHandler
+from telegram.handlers.StoryIsExistsHandler import HistoryIsExistsHandler
 
 
 class SuperGroupChain(AbstractHandler):
@@ -30,6 +31,7 @@ class SuperGroupChain(AbstractHandler):
         has_inline_keyboard_markup = HasInlineKeyboardMarkupHandler()
         is_trusted_member_handler = IsTrustedMemberHandler()
         is_uppercase_handler = UpperCaseHandler()
+        story_is_exists_handler = HistoryIsExistsHandler()
 
         (
             self.first_handler
@@ -41,6 +43,7 @@ class SuperGroupChain(AbstractHandler):
             .set_next(ban_words_check_handler)
             .set_next(is_premium_handler)
             .set_next(check_in_database_handler)
+            .set_next(story_is_exists_handler)
             .set_next(neural_check_handler)
         )
 
