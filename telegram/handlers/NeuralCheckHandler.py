@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from telegram.Message import Message
 from telegram.punishments import warning
 from utils import AbstractHandler
-from utils.AIClient import  AIClient
+from utils.AIClient import AIClient
 
 load_dotenv()
 

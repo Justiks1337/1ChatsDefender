@@ -4,6 +4,7 @@ from telegram.Message import Message
 from utils import AbstractHandler
 from telegram.punishments import ban
 
+
 class StoryIsExistsHandler(AbstractHandler):
     async def handle(self, message: Message):
         if message.message.story is not None:

@@ -29,7 +29,6 @@ class AIClient(Singleton, AIClientInterface):
     """
 
     def init(self, *args, **kwargs):
-
         # download filters
         nltk.download('stopwords')
         nltk.download('punkt_tab')

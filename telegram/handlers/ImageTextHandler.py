@@ -9,6 +9,7 @@ from telegram.dispatcher import bot
 from utils.AIClient import AIClient
 from telegram.punishments import warning
 
+
 class ImageTextHandler(AbstractHandler):
     """
     Проверка текста с картинки
