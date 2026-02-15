@@ -43,7 +43,7 @@ jobs:
           proxy_port: ${{secrets.VPN_PORT}}
           proxy_key: ${{secrets.VPN_PRIVATE_KEY}}
           proxy_username: ${{secrets.VPN_USER}}
-          source: ${{ steps.changed-files.outputs.all_changed_files }}
+          source: .
           target: ${{ vars.DEPLOY_PATH }}
 
       - name: Unpack
