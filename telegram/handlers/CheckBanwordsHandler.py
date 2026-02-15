@@ -18,9 +18,15 @@ class CheckBanwordsHandler(AbstractHandler):
         self.pattern = re.compile(text, re.IGNORECASE | re.UNICODE)
 
     async def handle(self, message: Message):
-        find = self.pattern.search(message.message.text)
+        find = None
+        caption_find = None
 
-        if find:
+        if message.message.text is not None:
+            find = self.pattern.search(message.message.text)
+        if message.message.caption is not None:
+            caption_find += self.pattern.search(message.message.caption)
+
+        if find or caption_find:
             message.is_trusted = False
             message.execute_middleware = True
             message.execute = warning(message.message)

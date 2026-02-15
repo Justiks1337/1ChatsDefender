@@ -7,6 +7,7 @@ from utils import DatabaseConnection
 from telegram.router import Router
 from telegram.handlers.NeuralCheckHandler import AIClient
 from telegram.Counter import Counter
+from utils.TextExtracter import TextExtracter
 
 load_dotenv()
 
@@ -17,6 +18,7 @@ async def main():
 
     Router()  # router - singleton. This line executes initial Router method
     AIClient()  # high resources task, process it before bot start
+    TextExtracter()  # init reader before bot start
     Counter()  # Is singleton. Init this for counter-start
 
     import telegram.handler  # load handlers
