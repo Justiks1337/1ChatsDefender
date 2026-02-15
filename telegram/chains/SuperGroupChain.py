@@ -13,11 +13,13 @@ from telegram.handlers.HasInlineKeyboardMarkupHandler import HasInlineKeyboardMa
 from telegram.handlers.IsTrustedMemberHandler import IsTrustedMemberHandler
 from telegram.handlers.UpperCaseHandler import UpperCaseHandler
 from telegram.handlers.EmptyHandler import EmptyHandler
+from telegram.handlers.StoryIsExistsHandler import StoryIsExistsHandler
+from telegram.handlers.ImageTextHandler import ImageTextHandler
 
 
 class SuperGroupChain(AbstractHandler):
 
-    whitelisted_chats = [-1001440778604, -1001375992358, -4288058510, -1002184712714, -4520083042, -1002168533309, -1002590134862]
+    whitelisted_chats = [-1001440778604, -1001375992358, -4288058510, -1002184712714, -4520083042, -1002168533309, -1002590134862, -1002090117492]
 
     def __init__(self):
         self.first_handler = EmptyHandler()
@@ -30,6 +32,8 @@ class SuperGroupChain(AbstractHandler):
         has_inline_keyboard_markup = HasInlineKeyboardMarkupHandler()
         is_trusted_member_handler = IsTrustedMemberHandler()
         is_uppercase_handler = UpperCaseHandler()
+        story_is_exists_handler = StoryIsExistsHandler()
+        image_text_handler = ImageTextHandler()
 
         (
             self.first_handler
@@ -41,7 +45,9 @@ class SuperGroupChain(AbstractHandler):
             .set_next(ban_words_check_handler)
             .set_next(is_premium_handler)
             .set_next(check_in_database_handler)
+            .set_next(story_is_exists_handler)
             .set_next(neural_check_handler)
+            .set_next(image_text_handler)
         )
 
     async def handle(self, message: Message):

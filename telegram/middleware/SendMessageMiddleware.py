@@ -15,6 +15,10 @@ class SendMessageMiddleware(MiddlewareInterface):
 
     @classmethod
     async def execute(cls, message: Message) -> Message:
+
+        if message.message.text is None:
+            return message
+
         message_to_admins_chat = os.getenv("VIOLATION_MESSAGE") \
             .replace("{nickname}", message.message.from_user.full_name) \
             .replace("{chat}", message.message.chat.title) \

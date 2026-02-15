@@ -34,7 +34,7 @@ class AbstractHandler(Handler):
         return handler
 
     @abstractmethod
-    async def handle(self, request: Any):  # In original pattern is sync, but I use async in my project
+    async def handle(self, request: Any) -> Any:  # In original pattern is sync, but I use async in my project
         if self._next_handler:
             return await self._next_handler.handle(request)
 

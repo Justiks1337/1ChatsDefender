@@ -3,7 +3,7 @@ name: build
 on:
   workflow_dispatch:
   push:
-    branches: [ main, dev ]
+    branches: [ dev ]
   pull_request:
   workflow_call:
 
@@ -11,10 +11,17 @@ jobs:
   flake8:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
-      - run: pip install -r requirements.txt  # Check requirements.txt is broken
-      - run: flake8 .
+        with:
+          python-version: '3.12'
+      - run: | 
+          python3 -m pip install uv
+          python3 -m uv pip install -r requirements.txt --dry-run
+      - run: | 
+          python3 -m pip install flake8
+          flake8 .
+
 
 #  unittest:
 #    runs-on: ubuntu-latest
