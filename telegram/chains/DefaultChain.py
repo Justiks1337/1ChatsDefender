@@ -5,7 +5,6 @@ from telegram.Message import Message
 from telegram.handlers.IsJoinMessageHandler import IsJoinMessageHandler
 from telegram.handlers.IsAdminHandler import IsAdminHandler
 from telegram.handlers.CheckBanwordsHandler import CheckBanwordsHandler
-from telegram.handlers.MessageHasTextHandler import MessageHasTextHandler
 from telegram.handlers.IsGroupHandler import IsGroupHandler
 from telegram.handlers.EmptyHandler import EmptyHandler
 
@@ -16,7 +15,6 @@ class DefaultChain(AbstractHandler):
         self.first_handler = EmptyHandler()
         is_group_handler = IsGroupHandler()
         is_join_message_handler = IsJoinMessageHandler()
-        message_has_text_handler = MessageHasTextHandler()
         is_admin_handler = IsAdminHandler()
         check_banwords_handler = CheckBanwordsHandler()
 
@@ -24,7 +22,6 @@ class DefaultChain(AbstractHandler):
             self.first_handler
             .set_next(is_group_handler)
             .set_next(is_join_message_handler)
-            .set_next(message_has_text_handler)
             .set_next(is_admin_handler)
             .set_next(check_banwords_handler)
         )

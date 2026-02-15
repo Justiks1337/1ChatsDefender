@@ -15,12 +15,17 @@ class NeuralCheckHandler(AbstractHandler):
     async def handle(self, message: Message):
         neural_client = AIClient()
 
-        # Я не хочу тратить токены в нейронке на маленькие сообщения. И писать отдельный хендлер под это не хочу. И вообще комментарий переводить на английский тоже лень
-        if len(message.message.text.split(" ")) < 7:
-            logging.debug("NeuralCheckHandler ignore message, because it len < 10")
-            return await super().handle(message)
+        text = False
+        caption = False
+        if message.message.text is not None:
+            if len(message.message.text.split(" ")) > 7:
+                text = neural_client.check_message(message.message.text)
 
-        if neural_client.check_message(message.message.text):
+        if message.message.caption is not None:
+            if len(message.message.caption.split(" ")) > 7:
+                caption = neural_client.check_message(message.message.caption)
+
+        if caption or text:
             message.is_trusted = False
             message.execute_middleware = True
             message.execute = warning(message.message)
