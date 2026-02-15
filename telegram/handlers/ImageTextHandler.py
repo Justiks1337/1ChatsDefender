@@ -35,4 +35,4 @@ class ImageTextHandler(AbstractHandler):
             logging.info("ImageTextHandler is worked now")
             return message
 
-        return super().handle(message)
+        return await super().handle(message)

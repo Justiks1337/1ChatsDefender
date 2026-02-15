@@ -16,8 +16,9 @@ class DatabaseConnection(Singleton):
         self.connect: Optional[aiosqlite.Connection] = None
 
     async def create_tables(self):
-        await self.connect.execute("""CREATE TABLE IF NOT EXISTS messages (
-            message TEXT PRIMARY KEY
+        await self.connect.execute("""CREATE TABLE IF NOT EXISTS banned_messages (
+            message TEXT PRIMARY KEY,
+            payload TEXT
             )
         """)
 
@@ -30,6 +31,13 @@ class DatabaseConnection(Singleton):
             user_id INTEGER PRIMARY KEY,
             joined_at INTEGER
         )""")
+
+        await self.connect.execute("""CREATE TABLE IF NOT EXISTS trusted_messages (
+            text TEXT,
+            json_payload TEXT
+        )""")
+
+        await self.connect.commit()
 
     async def get_connection(self):
         self.connect = await aiosqlite.connect(os.getenv("DATABASE_NAME"))
