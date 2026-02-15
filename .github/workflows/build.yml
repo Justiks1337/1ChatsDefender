@@ -15,7 +15,9 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
-      - run: python3 -m pip install -r requirements.txt  # Check requirements.txt is broken
+      - run: | 
+          python3 -m pip install uv
+          python3 -m uv pip install -r requirements.txt
       - run: flake8 .
 
 
