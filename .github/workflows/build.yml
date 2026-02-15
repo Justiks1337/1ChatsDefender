@@ -17,8 +17,10 @@ jobs:
           python-version: '3.12'
       - run: | 
           python3 -m pip install uv
-          python3 -m uv pip install -r requirements.txt
-      - run: flake8 .
+          python3 -m uv pip install -r requirements.txt --dry-run
+      - run: | 
+          python3 -m pip install flake8
+          flake8 .
 
 
 #  unittest:
