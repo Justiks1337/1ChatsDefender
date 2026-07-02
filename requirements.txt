@@ -6,7 +6,7 @@ aiosignal==1.4.0
 aiosqlite==0.22.1
 annotated-types==0.7.0
 attrs==26.1.0
-cachetools==7.0.1
+cachetools==7.1.4
 certifi==2026.6.17
 click==8.4.2
 DAWG2-Python==0.9.0
