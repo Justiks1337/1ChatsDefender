@@ -1,8 +1,9 @@
 import asyncio
+import logging
 
 from dotenv import load_dotenv
 
-from telegram.dispatcher import dp
+from telegram.dispatcher import dp, bot
 from utils import DatabaseConnection
 from telegram.router import Router
 from telegram.handlers.NeuralCheckHandler import AIClient
@@ -11,7 +12,8 @@ from telegram.Counter import Counter
 load_dotenv()
 
 
-async def main():
+@dp.startup()
+async def startup(bot):
     database_connection = DatabaseConnection()
     await database_connection.get_connection()  # Database is Singleton, that's why I call this method here
 
@@ -20,12 +22,15 @@ async def main():
     Counter()  # Is singleton. Init this for counter-start
 
     import telegram.handler  # load handlers
-    await dp.start_polling(telegram.dispatcher.bot)
 
 
-if __name__ == '__main__':
-    import logging
+@dp.shutdown()
+async def shutdown(bot):
+    database_connection = DatabaseConnection()
+    await database_connection.close()  # Закрываем соединение, для корректного завершнеия процесса
 
+
+def setup_logging():
     file_log = logging.FileHandler('Log.log')
     console_out = logging.StreamHandler()
 
@@ -34,4 +39,7 @@ if __name__ == '__main__':
                         datefmt='%m.%d.%Y %H:%M:%S',
                         level=logging.DEBUG)
 
-    asyncio.run(main())
+
+if __name__ == '__main__':
+    setup_logging()
+    asyncio.run(dp.start_polling(bot))

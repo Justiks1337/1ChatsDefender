@@ -2,6 +2,7 @@ import asyncio
 
 from aiogram.types import Message as AiogramMessage
 
+from telegram.Counter import Counter
 from utils import Singleton
 from telegram.Message import Message
 from telegram.middleware import middlewares
@@ -27,6 +28,9 @@ class Router(Singleton):
 
         message = Message(message)
         await self.__execute_punishment(await self.__execute_middleware(await self.__validate_message(message)))
+
+        counter = Counter()
+        counter.messages_handled += 1
 
     async def __validate_message(self, message: Message):
         """
