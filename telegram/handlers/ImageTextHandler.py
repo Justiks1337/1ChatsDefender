@@ -22,7 +22,6 @@ class ImageTextHandler(AbstractHandler):
     async def extract_text_from_image(self, image_bytes: bytes) -> Optional[str]:
         """
         Извлекает текст из изображения через OCR микросервис
-        
         :param image_bytes: Байты изображения
         :return: Извлеченный текст или None в случае ошибки
         """
@@ -50,9 +49,8 @@ class ImageTextHandler(AbstractHandler):
         photo_size: PhotoSize = message.message.photo[-1]
         photo = await bot.download(file=photo_size.file_id)
         photo_bytes = photo.read()
-        
         # Извлекаем текст через OCR микросервис
-        photo_text: str = await self.extract_text_from_image(photo_bytes)
+        photo_text: str | None = await self.extract_text_from_image(photo_bytes)
 
         if photo_text is None:
             logging.warning("Failed to extract text from image")
