@@ -5,6 +5,5 @@
   ],
   "baseBranchPatterns": [
     "dev"
-  ],
-  "matchPackageNames": ["pydantic", "pydantic-core"]
+  ]
 }
