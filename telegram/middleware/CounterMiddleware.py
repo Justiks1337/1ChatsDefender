@@ -22,5 +22,4 @@ class CounterMiddleware(MiddlewareInterface):
         # Если сообщение подлежит удалению
         if not message.is_trusted:
             counter.messages_deleted += 1
- 
         return message
