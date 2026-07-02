@@ -1,5 +1,7 @@
 import asyncio
 import logging
+import datetime
+import os
 
 from dotenv import load_dotenv
 
@@ -31,7 +33,13 @@ async def shutdown(bot):
 
 
 def setup_logging():
-    file_log = logging.FileHandler('Log.log')
+
+    # Создание папки с логами
+
+    if not os.path.exists("logs"):
+        os.mkdir("logs")
+
+    file_log = logging.FileHandler(f'logs/session-{datetime.datetime.now().__str__()}.log')
     console_out = logging.StreamHandler()
 
     logging.basicConfig(handlers=(file_log, console_out),
