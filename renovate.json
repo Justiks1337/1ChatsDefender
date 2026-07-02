@@ -3,6 +3,8 @@
   "extends": [
     "config:recommended"
   ],
-  "baseBranches": ["dev"],
+  "baseBranchPatterns": [
+    "dev"
+  ],
   "matchPackageNames": ["pydantic", "pydantic-core"]
 }
