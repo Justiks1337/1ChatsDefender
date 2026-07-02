@@ -32,7 +32,6 @@ class Router(Singleton):
         counter = Counter()
         counter.messages_handled += 1
 
-
     async def __validate_message(self, message: Message):
         """
         Start a chain of checks for message

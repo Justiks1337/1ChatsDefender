@@ -42,3 +42,17 @@ class DatabaseConnection(Singleton):
     async def get_connection(self):
         self.connect = await aiosqlite.connect(os.getenv("DATABASE_NAME"))
         await self.create_tables()
+
+    async def close(self):
+        """
+        Закрытие сессии aiosqlite
+        Так как сессия открывается один раз при запуске бота, она никогда не закрывается
+        Из-за этого процесс нужно очень неаккуратно убивать.
+
+        Это плохая практика, поэтому вызывайте это перед завершением процесса
+        :return: None
+        """
+
+        if self.connect is not None:
+            await self.connect.close()
+            self.connect = None
