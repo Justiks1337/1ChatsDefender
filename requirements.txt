@@ -49,7 +49,7 @@ setuptools==82.0.0
 shapely==2.1.2
 sympy==1.14.0
 threadpoolctl==3.6.0
-tifffile==2026.2.20
+tifffile==2026.6.1
 tqdm==4.67.3
 typing-inspection==0.4.2
 typing_extensions==4.15.0
