@@ -36,7 +36,7 @@ pipdeptree==3.1.0
 propcache==0.5.2
 pyasn1==0.6.3
 pycodestyle==2.14.0
-pydantic==2.12.5
+pydantic==2.13.4
 pydantic_core==2.41.5
 pyflakes==3.4.0
 pymorphy3==2.0.6
