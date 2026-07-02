@@ -220,3 +220,7 @@ secrets.txt
 .env*
 database.db
 vars.txt
+opencode.json
+
+# OCR Service (as submodule or separate repo)
+ocr-service/
