@@ -24,7 +24,7 @@ class CheckBanwordsHandler(AbstractHandler):
         if message.message.text is not None:
             find = self.pattern.search(message.message.text)
         if message.message.caption is not None:
-            caption_find += self.pattern.search(message.message.caption)
+            caption_find = self.pattern.search(message.message.caption)
 
         if find or caption_find:
             message.is_trusted = False
