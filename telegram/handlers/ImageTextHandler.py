@@ -17,7 +17,7 @@ class ImageTextHandler(AbstractHandler):
     """
 
     def __init__(self):
-        self.ocr_service_url = "http://localhost:8000/extract-text"  # URL OCR микросервиса
+        self.ocr_service_url = "http://172.17.0.1:8000/extract-text"  # URL OCR микросервиса
 
     async def extract_text_from_image(self, image_bytes: bytes) -> Optional[str]:
         """
