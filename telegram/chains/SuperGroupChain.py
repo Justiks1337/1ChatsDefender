@@ -15,6 +15,7 @@ from telegram.handlers.UpperCaseHandler import UpperCaseHandler
 from telegram.handlers.EmptyHandler import EmptyHandler
 from telegram.handlers.StoryIsExistsHandler import StoryIsExistsHandler
 from telegram.handlers.ImageTextHandler import ImageTextHandler
+from telegram.handlers.HasExternalReplyHandler import HasExternalReplyHandler
 
 
 class SuperGroupChain(AbstractHandler):
@@ -34,11 +35,13 @@ class SuperGroupChain(AbstractHandler):
         is_uppercase_handler = UpperCaseHandler()
         story_is_exists_handler = StoryIsExistsHandler()
         image_text_handler = ImageTextHandler()
+        has_external_reply_handler = HasExternalReplyHandler()
 
         (
             self.first_handler
             .set_next(has_inline_keyboard_markup)
             .set_next(is_trusted_member_handler)
+            .set_next(has_external_reply_handler)
             .set_next(has_premium_emojis_handler)
             .set_next(many_spaces_handler)
             .set_next(is_uppercase_handler)
