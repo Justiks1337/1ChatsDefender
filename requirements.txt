@@ -56,4 +56,4 @@ tifffile==2026.6.1
 tqdm==4.70.0
 typing-inspection==0.4.2
 typing_extensions==4.16.0
-yarl==1.24.2
+yarl==1.24.5
