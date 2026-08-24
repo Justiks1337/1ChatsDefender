@@ -42,7 +42,7 @@ pydantic_core==2.41.5
 pyflakes==3.4.0
 pymorphy3==2.0.6
 pymorphy3-dicts-ru==2.4.417150.4580142
-python-dotenv==1.2.2
+python-dotenv==1.2.3
 python-socks==2.8.2
 PyYAML==6.0.3
 regex==2026.7.19
