@@ -55,7 +55,7 @@ class SuperGroupChain(AbstractHandler):
 
     async def handle(self, message: Message):
 
-        if message.message.chat.id not in SuperGroupChain.whitelisted_chats:
+        if message.message.chat_id not in SuperGroupChain.whitelisted_chats:
             return await super().handle(message)
 
         result = await self.first_handler.handle(message)

@@ -1,4 +1,4 @@
-from aiogram.types import Message as AiogramMessage
+from telegram.MessageData import MessageData
 
 
 class Message:
@@ -8,13 +8,13 @@ class Message:
 
     Message attrs:
 
-    message: aiogram.types.Message - telegram message with all attrs
+    message: telegram.MessageData - датакласс содержащий нужную для чеков информацию о сообщении
     execute: coroutine - coro, which will be called in any case after passing the chain of checks, default - None
     is_trusted: bool - has the message passed verification
     """
 
-    def __init__(self, message: AiogramMessage):
-        self.__message: AiogramMessage = message
+    def __init__(self, message: MessageData):
+        self.__message: MessageData = message
         self._execute = None
         self._is_trusted = True
         self._execute_middleware = False
