@@ -7,7 +7,7 @@ from telegram.Message import Message
 class IsPremiumHandler(AbstractHandler):
     async def handle(self, message: Message):
 
-        if not message.message.from_user.is_premium:
+        if not message.message.from_user_is_premium:
             logging.debug("IsPremiumHandler worked now")
             return message
 

@@ -20,8 +20,8 @@ class SendMessageMiddleware(MiddlewareInterface):
             return message
 
         message_to_admins_chat = os.getenv("VIOLATION_MESSAGE") \
-            .replace("{nickname}", message.message.from_user.full_name) \
-            .replace("{chat}", message.message.chat.title) \
+            .replace("{nickname}", message.message.from_user_full_name) \
+            .replace("{chat}", message.message.chat_title) \
             .replace("{message}", message.message.text)
 
         await bot.send_message(cls.admins_chat_ids, message_to_admins_chat)
