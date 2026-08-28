@@ -9,6 +9,10 @@ from telegram.punishments import delete
 
 class IsJoinMessageHandler(AbstractHandler):
     async def handle(self, message: Message) -> Message:
+        if not isinstance(message.message.new_chat_members, bool):
+            logging.debug("IsJoinMessageHandler пропущен: new_chat_members не установлен")
+            return await super().handle(message)
+
         if message.message.new_chat_members:
             message.is_trusted = False
             message.execute = delete(message.message)

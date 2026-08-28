@@ -10,9 +10,14 @@ from telegram.punishments import warning
 # TODO: rewrite with message entities
 class HasPremiumEmojisHandler(AbstractHandler):
     async def handle(self, message: Message):
+        text = message.message.text
+        caption = message.message.caption
+        if not isinstance(text, str) and not isinstance(caption, str):
+            logging.debug("HasPremiumEmojisHandler пропущен: text и caption не установлены")
+            return await super().handle(message)
 
-        if not (self.validate_text(message.message.text) and self.validate_text(
-                message.message.caption)):  # 5 - message limit of emojis. If amount of emojis = 5 - message is not trusted
+        if not (self.validate_text(text) and self.validate_text(
+                caption)):  # 5 - message limit of emojis. If amount of emojis = 5 - message is not trusted
             message.is_trusted = False
             message.execute_middleware = True
             message.execute = warning(message.message)
@@ -21,10 +26,10 @@ class HasPremiumEmojisHandler(AbstractHandler):
 
         return await super().handle(message)
 
-    def validate_text(self, text: str | None):
+    def validate_text(self, text: object):
         result = 0
 
-        if text is None:
+        if not isinstance(text, str):
             return True
 
         for symbol in text:

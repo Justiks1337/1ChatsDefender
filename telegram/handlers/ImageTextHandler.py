@@ -43,8 +43,9 @@ class ImageTextHandler(AbstractHandler):
 
     async def handle(self, message: Message):
 
-        if message.message.photo is None:
-            return super().handle(message)
+        if not isinstance(message.message.photo, list) or not message.message.photo:
+            logging.debug("ImageTextHandler пропущен: photo не установлено")
+            return await super().handle(message)
 
         photo_size: PhotoSize = message.message.photo[-1]
         photo = await bot.download(file=photo_size.file_id)

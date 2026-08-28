@@ -18,6 +18,10 @@ class IsTrustedMemberHandler(AbstractHandler):
     IS_TRUSTED_MEMBER = int(os.getenv('IS_TRUSTED_MEMBER'))
 
     async def handle(self, message: Message):
+        if not isinstance(message.message.from_user_id, int):
+            logging.debug("IsTrustedMemberHandler пропущен: from_user_id не установлен")
+            return await super().handle(message)
+
         user_id = message.message.from_user_id
         joined_time: int = await self.__get_joined_time(user_id)
 

@@ -7,7 +7,11 @@ from telegram.punishments import ban
 
 class StoryIsExistsHandler(AbstractHandler):
     async def handle(self, message: Message):
-        if message.message.story is not None:
+        if not isinstance(message.message.story, bool):
+            logging.debug("StoryIsExistsHandler пропущен: story не установлен")
+            return await super().handle(message)
+
+        if message.message.story:
             message.is_trusted = False
             message.execute_middleware = True
             message.execute = ban(message.message)

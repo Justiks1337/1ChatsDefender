@@ -18,13 +18,19 @@ class CheckBanwordsHandler(AbstractHandler):
         self.pattern = re.compile(text, re.IGNORECASE | re.UNICODE)
 
     async def handle(self, message: Message):
+        text = message.message.text
+        caption = message.message.caption
+        if not isinstance(text, str) and not isinstance(caption, str):
+            logging.debug("CheckBanwordsHandler пропущен: text и caption не установлены")
+            return await super().handle(message)
+
         find = None
         caption_find = None
 
-        if message.message.text is not None:
-            find = self.pattern.search(message.message.text)
-        if message.message.caption is not None:
-            caption_find = self.pattern.search(message.message.caption)
+        if isinstance(text, str):
+            find = self.pattern.search(text)
+        if isinstance(caption, str):
+            caption_find = self.pattern.search(caption)
 
         if find or caption_find:
             message.is_trusted = False
