@@ -2,7 +2,7 @@ import logging
 
 from dotenv import load_dotenv
 
-from telegram.Message import Message
+from telegram.Context import Context
 from telegram.punishments import warning
 from utils import AbstractHandler
 from utils.AIClient import AIClient
@@ -12,7 +12,7 @@ load_dotenv()
 
 class NeuralCheckHandler(AbstractHandler):
 
-    async def handle(self, message: Message):
+    async def handle(self, message: Context):
         message_text = message.message.text
         message_caption = message.message.caption
         if not isinstance(message_text, str) and not isinstance(message_caption, str):

@@ -1,12 +1,12 @@
 import logging
 
-from telegram.Message import Message
+from telegram.Context import Context
 from utils import AbstractHandler
 from telegram.punishments import ban
 
 
 class StoryIsExistsHandler(AbstractHandler):
-    async def handle(self, message: Message):
+    async def handle(self, message: Context):
         if not isinstance(message.message.story, bool):
             logging.debug("StoryIsExistsHandler пропущен: story не установлен")
             return await super().handle(message)

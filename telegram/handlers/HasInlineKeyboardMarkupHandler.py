@@ -1,6 +1,6 @@
 import logging
 
-from telegram.Message import Message
+from telegram.Context import Context
 from telegram.punishments import ban
 from utils.patterns.chain_of_responsibility import AbstractHandler
 
@@ -11,7 +11,7 @@ class HasInlineKeyboardMarkupHandler(AbstractHandler):
     Этот хандлер удаляет подобные сообщения
     """
 
-    async def handle(self, message: Message):
+    async def handle(self, message: Context):
         if not isinstance(message.message.reply_markup, bool):
             logging.debug("HasInlineKeyboardMarkupHandler пропущен: reply_markup не установлен")
             return await super().handle(message)

@@ -4,7 +4,7 @@ from typing import Optional
 import aiohttp
 from aiogram.types import PhotoSize
 
-from telegram.Message import Message
+from telegram.Context import Context
 from utils.patterns.chain_of_responsibility import AbstractHandler
 from telegram.dispatcher import bot
 from utils.AIClient import AIClient
@@ -41,7 +41,7 @@ class ImageTextHandler(AbstractHandler):
             logging.error(f"Failed to extract text from image: {e}")
             return None
 
-    async def handle(self, message: Message):
+    async def handle(self, message: Context):
 
         if not isinstance(message.message.photo, list) or not message.message.photo:
             logging.debug("ImageTextHandler пропущен: photo не установлено")

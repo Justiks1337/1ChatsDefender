@@ -1,6 +1,6 @@
 import logging
 
-from telegram.Message import Message
+from telegram.Context import Context
 from telegram.punishments import warning
 from utils.patterns.chain_of_responsibility import AbstractHandler
 
@@ -16,7 +16,7 @@ class UpperCaseHandler(AbstractHandler):
     # Дабы не допустить ситуацию, в которой удаляется сообщение состоящее из одного символа, ограничим минимальное количество символов в сообщении
     MINIMUM_SYMBOLS = 10
 
-    async def handle(self, message: Message):
+    async def handle(self, message: Context):
         message_text = message.message.text
         message_caption = message.message.caption
         if not isinstance(message_text, str) and not isinstance(message_caption, str):

@@ -4,7 +4,7 @@ import logging
 
 from dotenv import load_dotenv
 
-from telegram.Message import Message
+from telegram.Context import Context
 from telegram.punishments import warning
 from utils import AbstractHandler
 
@@ -17,7 +17,7 @@ class CheckBanwordsHandler(AbstractHandler):
     def __init__(self, text=os.getenv("BANWORD_REGEX")):
         self.pattern = re.compile(text, re.IGNORECASE | re.UNICODE)
 
-    async def handle(self, message: Message):
+    async def handle(self, message: Context):
         text = message.message.text
         caption = message.message.caption
         if not isinstance(text, str) and not isinstance(caption, str):

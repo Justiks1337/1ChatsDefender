@@ -1,5 +1,5 @@
 from telegram.middleware.MiddlewareInterface import MiddlewareInterface
-from telegram.Message import Message
+from telegram.Context import Context
 from telegram.Counter import Counter
 
 
@@ -9,7 +9,7 @@ class CounterMiddleware(MiddlewareInterface):
     """
 
     @classmethod
-    async def execute(cls, message: Message) -> Message:
+    async def execute(cls, message: Context) -> Context:
         """
         Главный метод в middleware
 

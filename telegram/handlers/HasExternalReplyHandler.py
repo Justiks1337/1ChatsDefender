@@ -1,12 +1,12 @@
 import logging
 
-from telegram.Message import Message
+from telegram.Context import Context
 from telegram.punishments import ban
 from utils import AbstractHandler
 
 
 class HasExternalReplyHandler(AbstractHandler):
-    async def handle(self, message: Message):
+    async def handle(self, message: Context):
         if not isinstance(message.message.external_reply, bool):
             logging.debug("HasExternalReplyHandler пропущен: external_reply не установлен")
             return await super().handle(message)

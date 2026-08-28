@@ -3,12 +3,12 @@ import json
 from telegram.middleware.MiddlewareInterface import MiddlewareInterface
 from utils.database.connection import DatabaseConnection
 from aiogram.utils.serialization import deserialize_telegram_object_to_python
-from telegram.Message import Message
+from telegram.Context import Context
 
 
 class MessageToDatabaseMiddleware(MiddlewareInterface):
     @classmethod
-    async def execute(cls, message: Message) -> Message:
+    async def execute(cls, message: Context) -> Context:
         connect = DatabaseConnection().connect
         if not message.is_trusted:
             await connect.execute("INSERT OR IGNORE INTO banned_messages VALUES (?, ?)", (

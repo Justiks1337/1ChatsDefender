@@ -1,6 +1,6 @@
 import logging
 
-from telegram.Message import Message
+from telegram.Context import Context
 from utils import AbstractHandler
 
 
@@ -8,7 +8,7 @@ class IsGroupHandler(AbstractHandler):
     """
     This handler check, message send in a group, or in a dm
     """
-    async def handle(self, message: Message):
+    async def handle(self, message: Context):
         if not isinstance(message.message.chat_id, int) or not isinstance(message.message.from_user_id, int):
             logging.debug("IsGroupHandler пропущен: chat_id или from_user_id не установлен")
             return await super().handle(message)

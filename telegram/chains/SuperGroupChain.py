@@ -2,7 +2,7 @@ import logging
 import os
 
 from utils import AbstractHandler
-from telegram.Message import Message
+from telegram.Context import Context
 from telegram.handlers.CheckInDatabaseHandler import CheckInDatabaseHandler
 from telegram.handlers.NeuralCheckHandler import NeuralCheckHandler
 from telegram.handlers.HasPremiumEmojisHandler import HasPremiumEmojisHandler
@@ -50,7 +50,7 @@ class SuperGroupChain(AbstractHandler):
             .set_next(image_text_handler)
         )
 
-    async def handle(self, message: Message):
+    async def handle(self, message: Context):
         if not isinstance(message.message.chat_id, int):
             logging.debug("SuperGroupChain пропущена: chat_id не установлен")
             return await super().handle(message)

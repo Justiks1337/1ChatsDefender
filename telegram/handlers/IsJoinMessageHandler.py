@@ -3,12 +3,12 @@ import logging
 import aiogram.types
 
 from utils import AbstractHandler
-from telegram.Message import Message
+from telegram.Context import Context
 from telegram.punishments import delete
 
 
 class IsJoinMessageHandler(AbstractHandler):
-    async def handle(self, message: Message) -> Message:
+    async def handle(self, message: Context) -> Context:
         if not isinstance(message.message.new_chat_members, bool):
             logging.debug("IsJoinMessageHandler пропущен: new_chat_members не установлен")
             return await super().handle(message)

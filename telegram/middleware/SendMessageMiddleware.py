@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 
-from telegram.Message import Message
+from telegram.Context import Context
 from telegram.dispatcher import bot
 from telegram.middleware.MiddlewareInterface import MiddlewareInterface
 
@@ -14,7 +14,7 @@ class SendMessageMiddleware(MiddlewareInterface):
     admins_chat_ids = int(os.getenv("ADMINS_CHAT_ID"))  # Save admin chat id
 
     @classmethod
-    async def execute(cls, message: Message) -> Message:
+    async def execute(cls, message: Context) -> Context:
 
         if message.message.text is None:
             return message

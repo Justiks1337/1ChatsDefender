@@ -3,13 +3,13 @@ import logging
 import emoji
 
 from utils import AbstractHandler
-from telegram.Message import Message
+from telegram.Context import Context
 from telegram.punishments import warning
 
 
 # TODO: rewrite with message entities
 class HasPremiumEmojisHandler(AbstractHandler):
-    async def handle(self, message: Message):
+    async def handle(self, message: Context):
         text = message.message.text
         caption = message.message.caption
         if not isinstance(text, str) and not isinstance(caption, str):
