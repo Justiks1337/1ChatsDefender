@@ -12,8 +12,12 @@ class HasInlineKeyboardMarkupHandler(AbstractHandler):
     """
 
     async def handle(self, message: Message):
+        if not isinstance(message.message.reply_markup, bool):
+            logging.debug("HasInlineKeyboardMarkupHandler пропущен: reply_markup не установлен")
+            return await super().handle(message)
+
         # Проверяем наличие markup
-        if message.message.reply_markup is None:
+        if not message.message.reply_markup:
             return await super().handle(message)
 
         message.is_trusted = False

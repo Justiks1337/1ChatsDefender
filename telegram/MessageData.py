@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 from typing import List
 
+from telegram.sentinels import UNSET, UnsetType
 
-@dataclass
+
+@dataclass(kw_only=True)
 class MessageData:
     """
     Объект содержит компоненты из которых состоит сообщение Telegram, такие как текст сообщения, айди сообщения и прочее
@@ -11,18 +13,16 @@ class MessageData:
 
     """
 
-    text: str | None
-    caption: str | None
+    text: str | None | UnsetType = UNSET
+    caption: str | None | UnsetType = UNSET
 
-    from_user_id: int | None
-    from_user_full_name: str | None
-    from_user_is_premium: bool | None
+    from_user_id: int | None | UnsetType = UNSET
+    from_user_full_name: str | None | UnsetType = UNSET
+    chat_id: int | None | UnsetType = UNSET
+    chat_title: str | None | UnsetType = UNSET
 
-    chat_id: int | None
-    chat_title: str | None
-
-    story: bool | None  # Для бизнес логики имеет значение только наличие или отсутствие этого поля
-    reply_markup: bool | None  # Для бизнес логики имеет значение только наличие или отсутствие этого поля
-    photo: List | None  # TODO: В данный момент поле зависит от aiogram, оставил так для обратной совместимости
-    new_chat_members: bool | None  # Для бизнес логики имеет значение только наличие или отсутствие этого поля
-    external_reply: bool | None  # Для бизнес логики имеет значение только наличие или отсутствие этого поля
+    story: bool | None | UnsetType = UNSET  # Для бизнес логики имеет значение только наличие или отсутствие этого поля
+    reply_markup: bool | None | UnsetType = UNSET  # Для бизнес логики имеет значение только наличие или отсутствие этого поля
+    photo: List | None | UnsetType = UNSET  # TODO: В данный момент поле зависит от aiogram, оставил так для обратной совместимости
+    new_chat_members: bool | None | UnsetType = UNSET  # Для бизнес логики имеет значение только наличие или отсутствие этого поля
+    external_reply: bool | None | UnsetType = UNSET  # Для бизнес логики имеет значение только наличие или отсутствие этого поля

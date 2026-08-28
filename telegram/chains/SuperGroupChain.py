@@ -5,7 +5,6 @@ from utils import AbstractHandler
 from telegram.Message import Message
 from telegram.handlers.CheckInDatabaseHandler import CheckInDatabaseHandler
 from telegram.handlers.NeuralCheckHandler import NeuralCheckHandler
-from telegram.handlers.IsPremiumHandler import IsPremiumHandler
 from telegram.handlers.HasPremiumEmojisHandler import HasPremiumEmojisHandler
 from telegram.handlers.ManySpacesHandler import ManySpacesHandler
 from telegram.handlers.CheckBanwordsHandler import CheckBanwordsHandler
@@ -28,7 +27,6 @@ class SuperGroupChain(AbstractHandler):
         neural_check_handler = NeuralCheckHandler()
         many_spaces_handler = ManySpacesHandler()
         has_premium_emojis_handler = HasPremiumEmojisHandler()
-        is_premium_handler = IsPremiumHandler()
         ban_words_check_handler = CheckBanwordsHandler(text=os.getenv("SUPERGROUP_BANWORD_REGEX"))
         has_inline_keyboard_markup = HasInlineKeyboardMarkupHandler()
         is_trusted_member_handler = IsTrustedMemberHandler()
@@ -46,7 +44,6 @@ class SuperGroupChain(AbstractHandler):
             .set_next(many_spaces_handler)
             .set_next(is_uppercase_handler)
             .set_next(ban_words_check_handler)
-            .set_next(is_premium_handler)
             .set_next(check_in_database_handler)
             .set_next(story_is_exists_handler)
             .set_next(neural_check_handler)
@@ -54,6 +51,9 @@ class SuperGroupChain(AbstractHandler):
         )
 
     async def handle(self, message: Message):
+        if not isinstance(message.message.chat_id, int):
+            logging.debug("SuperGroupChain пропущена: chat_id не установлен")
+            return await super().handle(message)
 
         if message.message.chat_id not in SuperGroupChain.whitelisted_chats:
             return await super().handle(message)

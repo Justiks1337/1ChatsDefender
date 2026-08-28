@@ -10,6 +10,9 @@ class ManySpacesHandler(AbstractHandler):
 
         text = message.message.text
         caption = message.message.caption
+        if not isinstance(text, str) and not isinstance(caption, str):
+            logging.debug("ManySpacesHandler пропущен: text и caption не установлены")
+            return await super().handle(message)
 
         if not (self.validate_text(text) and self.validate_text(caption)):
             message.is_trusted = False
@@ -20,8 +23,8 @@ class ManySpacesHandler(AbstractHandler):
 
         return await super().handle(message)
 
-    def validate_text(self, text: str | None):
-        if text is None:
+    def validate_text(self, text: object):
+        if not isinstance(text, str) or not text:
             return True
 
         return not (text.count(" ") / len(text) * 100 > 35)

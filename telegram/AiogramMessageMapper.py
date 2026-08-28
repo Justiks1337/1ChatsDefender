@@ -15,7 +15,6 @@ class AiogramMessageMapper:
             caption=message.caption,
             from_user_id=from_user.id if from_user is not None else None,
             from_user_full_name=from_user.full_name if from_user is not None else None,
-            from_user_is_premium=from_user.is_premium if from_user is not None else None,
             chat_id=message.chat.id,
             chat_title=message.chat.title,
             story=True if message.story is not None else None,

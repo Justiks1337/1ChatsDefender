@@ -17,16 +17,21 @@ class UpperCaseHandler(AbstractHandler):
     MINIMUM_SYMBOLS = 10
 
     async def handle(self, message: Message):
+        message_text = message.message.text
+        message_caption = message.message.caption
+        if not isinstance(message_text, str) and not isinstance(message_caption, str):
+            logging.debug("UpperCaseHandler пропущен: text и caption не установлены")
+            return await super().handle(message)
 
         text = False
         caption = False
-        if message.message.text is not None:
-            if len(message.message.text) > self.MINIMUM_SYMBOLS:
-                text = self.__check(message.message.text)
+        if isinstance(message_text, str):
+            if len(message_text) > self.MINIMUM_SYMBOLS:
+                text = self.__check(message_text)
 
-        if message.message.caption is not None:
-            if len(message.message.caption) > self.MINIMUM_SYMBOLS:
-                caption = self.__check(message.message.caption)
+        if isinstance(message_caption, str):
+            if len(message_caption) > self.MINIMUM_SYMBOLS:
+                caption = self.__check(message_caption)
 
         if caption or text:
             message.is_trusted = False

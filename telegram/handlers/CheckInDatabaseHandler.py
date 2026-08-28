@@ -10,6 +10,10 @@ from telegram.punishments import warning
 
 class CheckInDatabaseHandler(AbstractHandler):
     async def handle(self, message: Message):
+        if not isinstance(message.message.text, str):
+            logging.debug("CheckInDatabaseHandler пропущен: text не установлен")
+            return await super().handle(message)
+
         cursor: aiosqlite.Cursor = await DatabaseConnection().connect.cursor()
         result_set = await cursor.execute(
             "SELECT * FROM messages WHERE message=?",
