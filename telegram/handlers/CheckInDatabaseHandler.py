@@ -3,13 +3,13 @@ import logging
 import aiosqlite
 
 from utils import AbstractHandler
-from telegram.Message import Message
+from telegram.Context import Context
 from utils.database.connection import DatabaseConnection
 from telegram.punishments import warning
 
 
 class CheckInDatabaseHandler(AbstractHandler):
-    async def handle(self, message: Message):
+    async def handle(self, message: Context):
         if not isinstance(message.message.text, str):
             logging.debug("CheckInDatabaseHandler пропущен: text не установлен")
             return await super().handle(message)

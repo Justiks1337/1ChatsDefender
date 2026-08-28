@@ -1,7 +1,7 @@
 import logging
 
 from utils import AbstractHandler
-from telegram.Message import Message
+from telegram.Context import Context
 from telegram.handlers.IsJoinMessageHandler import IsJoinMessageHandler
 from telegram.handlers.IsAdminHandler import IsAdminHandler
 from telegram.handlers.CheckBanwordsHandler import CheckBanwordsHandler
@@ -26,7 +26,7 @@ class DefaultChain(AbstractHandler):
             .set_next(check_banwords_handler)
         )
 
-    async def handle(self, message: Message):
+    async def handle(self, message: Context):
         result = await self.first_handler.handle(message)
 
         if not result.is_trusted or not result.next_handler:

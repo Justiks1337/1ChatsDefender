@@ -1,12 +1,12 @@
 from telegram.MessageData import MessageData
 
 
-class Message:
+class Context:
 
     """
     Instances of this class will go through a chain of checks
 
-    Message attrs:
+    Context attrs:
 
     message: telegram.MessageData - датакласс содержащий нужную для чеков информацию о сообщении
     execute: coroutine - coro, which will be called in any case after passing the chain of checks, default - None

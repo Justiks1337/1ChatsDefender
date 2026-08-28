@@ -22,8 +22,8 @@ async def delete(message: aiogram.types.Message):
     :return:
     """
 
-    await bot.delete_message(message.chat.id, message.message_id)
-    logging.debug(f"message <{message.text}> in {message.chat.title} was deleted")
+    await bot.delete_message(message.chat_id, message.message_id)
+    logging.debug(f"message <{message.text}> in {message.chat_title} was deleted")
 
 
 async def warning(message: aiogram.types.Message):
@@ -34,14 +34,14 @@ async def warning(message: aiogram.types.Message):
             VALUES (?, 1)
             ON CONFLICT(user_id) DO
             UPDATE SET warnings=warnings+1""", (
-        message.from_user.id,
+        message.from_user_id,
     ))
 
     await database_connection.commit()
 
     result_set = await database_connection.execute(
         "SELECT user_id FROM users WHERE user_id = ? AND warnings >= ? ", (
-            message.from_user.id,
+            message.from_user_id,
             MAX_WARNINGS))
 
     if await result_set.fetchone():
@@ -54,9 +54,9 @@ async def warning(message: aiogram.types.Message):
 async def ban(message: aiogram.types.Message):
     await delete(message)
     try:
-        await bot.ban_chat_member(message.chat.id, message.from_user.id)
-        logging.info(f"user {message.from_user.full_name} banned in {message.chat.title}")
+        await bot.ban_chat_member(message.chat_id, message.from_user_id)
+        logging.info(f"user {message.from_user_full_name} banned in {message.chat_title}")
     except aiogram.exceptions.TelegramBadRequest:
         logging.warning(
-            f"user {message.from_user.id} could be banned, but bot has no access to ban in group {message.chat.id}"
+            f"user {message.from_user_id} could be banned, but bot has no access to ban in group {message.chat_id}"
         )

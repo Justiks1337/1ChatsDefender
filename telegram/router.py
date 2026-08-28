@@ -5,7 +5,7 @@ from aiogram.types import Message as AiogramMessage
 from telegram.AiogramMessageMapper import AiogramMessageMapper
 from telegram.Counter import Counter
 from utils import Singleton
-from telegram.Message import Message
+from telegram.Context import Context
 from telegram.middleware import middlewares
 from telegram.chains.DefaultChain import DefaultChain
 from telegram.chains.SuperGroupChain import SuperGroupChain
@@ -23,21 +23,21 @@ class Router(Singleton):
         """
         Start message validate
 
-        :param message: telegram.Message.Message
+        :param message: telegram.Context.Context
         :return: None
         """
 
-        message = Message(AiogramMessageMapper.map(message))
+        message = Context(AiogramMessageMapper.map(message))
         await self.__execute_punishment(await self.__execute_middleware(await self.__validate_message(message)))
 
         counter = Counter()
         counter.messages_handled += 1
 
-    async def __validate_message(self, message: Message):
+    async def __validate_message(self, message: Context):
         """
         Start a chain of checks for message
 
-        :param message: telegram.Message.Message
+        :param message: telegram.Context.Context
         :return: validate message
         """
 
@@ -47,7 +47,7 @@ class Router(Singleton):
         """
         Execute all middlewares for this message
 
-        :param message:  telegram.Message.Message
+        :param message:  telegram.Context.Context
         :return: edited message by middlewares
         """
 
@@ -59,11 +59,11 @@ class Router(Singleton):
 
         return message
 
-    async def __execute_punishment(self, message: Message):
+    async def __execute_punishment(self, message: Context):
         """
         End message validate, Verdict.
 
-        :param message: telegram.Message.Message
+        :param message: telegram.Context.Context
         :return: None
         """
 

@@ -45,8 +45,8 @@ class ChatAdminsFabric(Singleton):
         """
 
         # search in administrators list
-        user_id = message.from_user.id
-        admins = await self.get(message.chat.id)
+        user_id = message.from_user_id
+        admins = await self.get(message.chat_id)
 
         if user_id in admins:
             return True
@@ -55,7 +55,7 @@ class ChatAdminsFabric(Singleton):
         # in this case anonymous administrator isn't trusted
         # check user is admin by User.is_bot = True
 
-        if message.from_user.is_bot:
+        if message.from_user_is_bot:
             return True
 
         # member is not admin

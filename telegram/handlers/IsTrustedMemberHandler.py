@@ -3,7 +3,7 @@ import os
 from typing import Optional
 import logging
 
-from telegram.Message import Message
+from telegram.Context import Context
 from utils.patterns.chain_of_responsibility import AbstractHandler
 from utils.database.connection import DatabaseConnection
 
@@ -17,7 +17,7 @@ class IsTrustedMemberHandler(AbstractHandler):
     # Время в секундах, после которого пользователь считается доверенным и игнорируется
     IS_TRUSTED_MEMBER = int(os.getenv('IS_TRUSTED_MEMBER'))
 
-    async def handle(self, message: Message):
+    async def handle(self, message: Context):
         if not isinstance(message.message.from_user_id, int):
             logging.debug("IsTrustedMemberHandler пропущен: from_user_id не установлен")
             return await super().handle(message)
