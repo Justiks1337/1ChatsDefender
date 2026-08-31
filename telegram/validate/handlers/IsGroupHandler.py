@@ -1,7 +1,7 @@
 import logging
 
-from telegram.Context import Context
-from utils import AbstractHandler
+from telegram.validate.Context import Context
+from telegram.validate.handlers import AbstractHandler
 
 
 class IsGroupHandler(AbstractHandler):
@@ -19,3 +19,6 @@ class IsGroupHandler(AbstractHandler):
             return message
 
         return await super().handle(message)
+
+    def is_available(self) -> bool:
+        return True

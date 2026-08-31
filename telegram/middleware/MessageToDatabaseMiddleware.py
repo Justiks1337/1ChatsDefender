@@ -3,7 +3,7 @@ import json
 from telegram.middleware.MiddlewareInterface import MiddlewareInterface
 from utils.database.connection import DatabaseConnection
 from aiogram.utils.serialization import deserialize_telegram_object_to_python
-from telegram.Context import Context
+from telegram.validate.Context import Context
 
 
 class MessageToDatabaseMiddleware(MiddlewareInterface):

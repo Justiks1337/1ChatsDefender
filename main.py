@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from telegram.dispatcher import dp, bot
 from utils import DatabaseConnection
 from telegram.router import Router
-from telegram.handlers.NeuralCheckHandler import AIClient
+from utils import AIClient
 from telegram.Counter import Counter
 
 load_dotenv()
@@ -22,8 +22,6 @@ async def startup(bot):
     Router()  # router - singleton. This line executes initial Router method
     AIClient()  # high resources task, process it before bot start
     Counter()  # Is singleton. Init this for counter-start
-
-    import telegram.handler  # load handlers
 
 
 @dp.shutdown()

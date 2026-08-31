@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from telegram.sentinels import UNSET, UnsetType
+from telegram.validate.sentinels import UNSET, UnsetType
 
 
 @dataclass(kw_only=True)
@@ -13,13 +13,14 @@ class MessageData:
 
     """
 
+    message_id: int | None | UnsetType = UNSET
+
     text: str | None | UnsetType = UNSET
     caption: str | None | UnsetType = UNSET
 
     from_user_id: int | None | UnsetType = UNSET
     from_user_full_name: str | None | UnsetType = UNSET
     from_user_is_bot: bool | None | UnsetType = UNSET
-    from_user_full_name: bool | None | UnsetType = Unset
 
     chat_id: int | None | UnsetType = UNSET
     chat_title: str | None | UnsetType = UNSET

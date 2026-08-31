@@ -1,5 +1,5 @@
-from telegram.Context import Context
-from utils.patterns.chain_of_responsibility import AbstractHandler
+from telegram.validate.Context import Context
+from telegram.validate.handlers.AbstractHandler import AbstractHandler
 
 
 class EmptyHandler(AbstractHandler):
@@ -12,3 +12,6 @@ class EmptyHandler(AbstractHandler):
             return await self._next_handler.handle(message)
 
         return message
+
+    def is_available(self) -> bool:
+        return True

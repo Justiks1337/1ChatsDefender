@@ -1,5 +1,5 @@
 from telegram.middleware.MiddlewareInterface import MiddlewareInterface
-from telegram.Context import Context
+from telegram.validate.Context import Context
 from telegram.Counter import Counter
 
 
