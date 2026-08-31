@@ -1,8 +1,8 @@
 import logging
 
-from telegram.Context import Context
-from telegram.punishments import warning
-from utils.patterns.chain_of_responsibility import AbstractHandler
+from telegram.validate.Context import Context
+from telegram.validate.PunishmentCommand import PunishmentCommand, PunishmentType
+from telegram.validate.handlers.AbstractHandler import AbstractHandler
 
 
 class UpperCaseHandler(AbstractHandler):
@@ -16,6 +16,19 @@ class UpperCaseHandler(AbstractHandler):
     # Дабы не допустить ситуацию, в которой удаляется сообщение состоящее из одного символа, ограничим минимальное количество символов в сообщении
     MINIMUM_SYMBOLS = 10
 
+    def _check_message(self, text: object, caption: object) -> bool:
+        text_result = (
+            isinstance(text, str)
+            and len(text) > self.MINIMUM_SYMBOLS
+            and self._check_text(text)
+        )
+        caption_result = (
+            isinstance(caption, str)
+            and len(caption) > self.MINIMUM_SYMBOLS
+            and self._check_text(caption)
+        )
+        return text_result or caption_result
+
     async def handle(self, message: Context):
         message_text = message.message.text
         message_caption = message.message.caption
@@ -23,25 +36,19 @@ class UpperCaseHandler(AbstractHandler):
             logging.debug("UpperCaseHandler пропущен: text и caption не установлены")
             return await super().handle(message)
 
-        text = False
-        caption = False
-        if isinstance(message_text, str):
-            if len(message_text) > self.MINIMUM_SYMBOLS:
-                text = self.__check(message_text)
-
-        if isinstance(message_caption, str):
-            if len(message_caption) > self.MINIMUM_SYMBOLS:
-                caption = self.__check(message_caption)
-
-        if caption or text:
+        if self._check_message(message_text, message_caption):
             message.is_trusted = False
-            message.execute = warning(message.message)
+            message.punishment = PunishmentCommand(
+                PunishmentType.WARNING,
+                reason="Превышен допустимый процент заглавных букв",
+                source=type(self).__name__,
+            )
             logging.info("Upper Case Handler is worked now")
             return message
 
         return await super().handle(message)
 
-    def __check(self, text: str) -> bool:
+    def _check_text(self, text: str) -> bool:
         """
         Проверьте сообщение на капс и верните bool
         :return: True, если сообщение превышает лимиты, иначе False
@@ -95,3 +102,6 @@ class UpperCaseHandler(AbstractHandler):
 
         # На всякий случай, если произойдет исход когда не одно из условий не сработало (по идее не возможно)
         return False
+
+    def is_available(self) -> bool:
+        return True

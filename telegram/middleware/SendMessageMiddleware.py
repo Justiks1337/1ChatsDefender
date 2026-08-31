@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 
-from telegram.Context import Context
+from telegram.validate.Context import Context
 from telegram.dispatcher import bot
 from telegram.middleware.MiddlewareInterface import MiddlewareInterface
 

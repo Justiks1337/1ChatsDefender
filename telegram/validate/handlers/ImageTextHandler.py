@@ -2,22 +2,37 @@ import logging
 from typing import Optional
 
 import aiohttp
-from aiogram.types import PhotoSize
 
-from telegram.Context import Context
-from utils.patterns.chain_of_responsibility import AbstractHandler
-from telegram.dispatcher import bot
-from utils.AIClient import AIClient
-from telegram.punishments import warning
+from telegram.validate.Context import Context
+from telegram.validate.PunishmentCommand import PunishmentCommand, PunishmentType
+from telegram.validate.handlers.AbstractHandler import AbstractHandler
 
 
 class ImageTextHandler(AbstractHandler):
     """
-    Проверка текста с картинки через OCR микросервис
+Проверка текста с картинки через OCR микросервис
     """
 
     def __init__(self):
-        self.ocr_service_url = "http://172.17.0.1:8000/extract-text"  # URL OCR микросервиса
+        self.__available = True
+
+        try:
+            from utils.AIClient import AIClient
+            from telegram.dispatcher import bot
+
+            self.__ai_client = AIClient()
+            self.__bot = bot
+            self.ocr_service_url = "http://172.17.0.1:8000/extract-text"  # URL OCR микросервиса
+
+        except ImportError:
+            self.__available = False
+            logging.error(
+                "Не удалось загрузить ImageTextHandler из-за недостающей зависимости"
+            )
+
+
+    def _check_message(self, text: str) -> bool:
+        return self.__ai_client.check_message(text)
 
     async def extract_text_from_image(self, image_bytes: bytes) -> Optional[str]:
         """
@@ -47,8 +62,8 @@ class ImageTextHandler(AbstractHandler):
             logging.debug("ImageTextHandler пропущен: photo не установлено")
             return await super().handle(message)
 
-        photo_size: PhotoSize = message.message.photo[-1]
-        photo = await bot.download(file=photo_size.file_id)
+        photo_size = message.message.photo[-1]
+        photo = await self.__bot.download(file=photo_size.file_id)
         photo_bytes = photo.read()
         # Извлекаем текст через OCR микросервис
         photo_text: str | None = await self.extract_text_from_image(photo_bytes)
@@ -57,13 +72,18 @@ class ImageTextHandler(AbstractHandler):
             logging.warning("Failed to extract text from image")
             return await super().handle(message)
 
-        ai_client = AIClient()
-
-        if ai_client.check_message(photo_text):
+        if self._check_message(photo_text):
             message.is_trusted = False
             message.execute_middleware = True
-            message.execute = warning(message.message)
+            message.punishment = PunishmentCommand(
+                PunishmentType.WARNING,
+                reason="Недопустимый текст на изображении",
+                source=type(self).__name__,
+            )
             logging.info("ImageTextHandler is worked now")
             return message
 
         return await super().handle(message)
+
+    def is_available(self) -> bool:
+        return self.__available

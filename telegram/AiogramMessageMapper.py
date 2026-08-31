@@ -1,6 +1,6 @@
 from aiogram.types import Message as AiogramMessage
 
-from telegram.MessageData import MessageData
+from telegram.validate.MessageData import MessageData
 
 
 class AiogramMessageMapper:
@@ -11,10 +11,12 @@ class AiogramMessageMapper:
         from_user = message.from_user
 
         return MessageData(
+            message_id=message.message_id,
             text=message.text,
             caption=message.caption,
             from_user_id=from_user.id if from_user is not None else None,
             from_user_full_name=from_user.full_name if from_user is not None else None,
+            from_user_is_bot=from_user.is_bot if from_user is not None else None,
             chat_id=message.chat.id,
             chat_title=message.chat.title,
             story=True if message.story is not None else None,

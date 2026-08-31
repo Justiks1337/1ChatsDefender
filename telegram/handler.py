@@ -1,5 +1,4 @@
 import logging
-import datetime
 import time
 
 from aiogram.filters.command import Command

@@ -39,3 +39,8 @@ class AbstractHandler(Handler):
             return await self._next_handler.handle(request)
 
         return request
+
+    @abstractmethod
+    def is_available(self) -> bool:
+        """Вернуть True, если доступны все зависимости, необходимые обработчику."""
+        raise NotImplementedError

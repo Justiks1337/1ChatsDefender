@@ -2,13 +2,16 @@ import logging
 
 import emoji
 
-from utils import AbstractHandler
-from telegram.Context import Context
-from telegram.punishments import warning
+from telegram.validate.handlers import AbstractHandler
+from telegram.validate.Context import Context
+from telegram.validate.PunishmentCommand import PunishmentCommand, PunishmentType
 
 
 # TODO: rewrite with message entities
 class HasPremiumEmojisHandler(AbstractHandler):
+    def _check_message(self, text: object, caption: object) -> bool:
+        return not (self._validate_text(text) and self._validate_text(caption))
+
     async def handle(self, message: Context):
         text = message.message.text
         caption = message.message.caption
@@ -16,17 +19,20 @@ class HasPremiumEmojisHandler(AbstractHandler):
             logging.debug("HasPremiumEmojisHandler пропущен: text и caption не установлены")
             return await super().handle(message)
 
-        if not (self.validate_text(text) and self.validate_text(
-                caption)):  # 5 - message limit of emojis. If amount of emojis = 5 - message is not trusted
+        if self._check_message(text, caption):
             message.is_trusted = False
             message.execute_middleware = True
-            message.execute = warning(message.message)
+            message.punishment = PunishmentCommand(
+                PunishmentType.WARNING,
+                reason="Превышен лимит эмодзи",
+                source=type(self).__name__,
+            )
             logging.info("HasPremiumEmojisHandler is worked now")
             return message
 
         return await super().handle(message)
 
-    def validate_text(self, text: object):
+    def _validate_text(self, text: object) -> bool:
         result = 0
 
         if not isinstance(text, str):
@@ -39,4 +45,7 @@ class HasPremiumEmojisHandler(AbstractHandler):
                 if result > 4:  # 5 - message limit of emojis. If amount of emojis = 5 - message is not trusted
                     return False
 
+        return True
+
+    def is_available(self) -> bool:
         return True

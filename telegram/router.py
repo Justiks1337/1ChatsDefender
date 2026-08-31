@@ -1,14 +1,13 @@
-import asyncio
-
 from aiogram.types import Message as AiogramMessage
 
 from telegram.AiogramMessageMapper import AiogramMessageMapper
 from telegram.Counter import Counter
 from utils import Singleton
-from telegram.Context import Context
+from telegram.validate.Context import Context
 from telegram.middleware import middlewares
-from telegram.chains.DefaultChain import DefaultChain
-from telegram.chains.SuperGroupChain import SuperGroupChain
+from telegram.middleware.PunishmentMiddleware import PunishmentMiddleware
+from telegram.validate.chains.DefaultChain import DefaultChain
+from telegram.validate.chains.SuperGroupChain import SuperGroupChain
 
 
 class Router(Singleton):
@@ -27,8 +26,10 @@ class Router(Singleton):
         :return: None
         """
 
-        message = Context(AiogramMessageMapper.map(message))
-        await self.__execute_punishment(await self.__execute_middleware(await self.__validate_message(message)))
+        context = Context(AiogramMessageMapper.map(message))
+        context = await self.__validate_message(context)
+        context = await self.__execute_middleware(context)
+        await PunishmentMiddleware.execute(context)
 
         counter = Counter()
         counter.messages_handled += 1
@@ -58,16 +59,3 @@ class Router(Singleton):
             message = await middleware.execute(message)
 
         return message
-
-    async def __execute_punishment(self, message: Context):
-        """
-        End message validate, Verdict.
-
-        :param message: telegram.Context.Context
-        :return: None
-        """
-
-        punishment = message.execute
-
-        if asyncio.iscoroutine(punishment):
-            await punishment
