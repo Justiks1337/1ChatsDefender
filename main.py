@@ -10,6 +10,7 @@ from utils import DatabaseConnection
 from telegram.router import Router
 from utils import AIClient
 from telegram.Counter import Counter
+from telegram.handler import router
 
 load_dotenv()
 
@@ -22,6 +23,9 @@ async def startup(bot):
     Router()  # router - singleton. This line executes initial Router method
     AIClient()  # high resources task, process it before bot start
     Counter()  # Is singleton. Init this for counter-start
+
+    # reg handlers
+    dp.include_router(router)
 
 
 @dp.shutdown()

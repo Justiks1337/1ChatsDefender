@@ -1,18 +1,19 @@
 import logging
 import time
 
+from aiogram import Router as AiogramRouter
 from aiogram.filters.command import Command
 from aiogram.types import Message
 
+from telegram.Counter import Counter
 from telegram.admin_management import ChatAdminsFabric
 from telegram.punishments import ban
-from telegram.dispatcher import dp
 from telegram.router import Router
-from telegram.Counter import Counter
 from utils.database.connection import DatabaseConnection
 
+router = AiogramRouter()
 
-@dp.message(Command("ban"))
+@router.message(Command("ban"))
 async def ban_command_handler(message: Message):
     """delete reply_to_message and write it to database"""
 
@@ -44,12 +45,12 @@ async def ban_command_handler(message: Message):
         int(bool(ban_message.forward_origin)),
         0  # bot can't get access to message.reply_to_message.reply_to_message. Always is false
     )
-    )
+                          )
 
     await connect.commit()
 
 
-@dp.message(Command("ping"))
+@router.message(Command("ping"))
 async def ping_command_handler(message: Message):
     """
     /ping command handler (cosmetic)
@@ -86,7 +87,7 @@ async def ping_command_handler(message: Message):
     await message.answer(message_text)
 
 
-@dp.message()
+@router.message()
 async def main_handler(message: Message):
     logging.debug(f"handle a message - {message.text}")
     await Router().to_route(message)
