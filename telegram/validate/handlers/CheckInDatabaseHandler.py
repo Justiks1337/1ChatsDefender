@@ -23,11 +23,7 @@ class CheckInDatabaseHandler(AbstractHandler):
                 "Не удалось загрузить CheckInDatabaseHandler из-за недостающей зависимости DatabaseConnection!")
 
     async def _check_message(self, text: str) -> bool:
-        cursor = await self.__connection.connect.cursor()
-        result_set = await cursor.execute(
-            "SELECT * FROM messages WHERE message=?",
-            (text,))
-        return await result_set.fetchone() is not None
+        return await self.__connection.is_message_banned(text)
 
     async def handle(self, message: Context):
         if not isinstance(message.message.text, str):

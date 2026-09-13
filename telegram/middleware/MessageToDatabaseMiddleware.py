@@ -9,19 +9,13 @@ from telegram.validate.Context import Context
 class MessageToDatabaseMiddleware(MiddlewareInterface):
     @classmethod
     async def execute(cls, message: Context) -> Context:
-        connect = DatabaseConnection().connect
+        database = DatabaseConnection()
+        payload = json.dumps(
+            deserialize_telegram_object_to_python(message.message), ensure_ascii=False, indent=4, default=str
+        )
         if not message.is_trusted:
-            await connect.execute("INSERT OR IGNORE INTO banned_messages VALUES (?, ?)", (
-                message.message.text,
-                json.dumps(deserialize_telegram_object_to_python(message.message), ensure_ascii=False, indent=4, default=str)
-            ))
-
+            await database.save_banned_message(message.message.text, payload)
         else:
-            await connect.execute("INSERT OR IGNORE INTO trusted_messages VALUES (?, ?)", (
-                message.message.text,
-                json.dumps(deserialize_telegram_object_to_python(message.message), ensure_ascii=False, indent=4, default=str)
-            ))
-
-        await connect.commit()
+            await database.save_trusted_message(message.message.text, payload)
 
         return message

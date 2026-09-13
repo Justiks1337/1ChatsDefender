@@ -27,24 +27,10 @@ async def delete(message: aiogram.types.Message):
 
 
 async def warning(message: aiogram.types.Message):
-    database_connection = DatabaseConnection().connect
+    database_connection = DatabaseConnection()
+    await database_connection.increment_warnings(message.from_user_id)
 
-    await database_connection.execute("""
-            INSERT INTO users (user_id, warnings)
-            VALUES (?, 1)
-            ON CONFLICT(user_id) DO
-            UPDATE SET warnings=warnings+1""", (
-        message.from_user_id,
-    ))
-
-    await database_connection.commit()
-
-    result_set = await database_connection.execute(
-        "SELECT user_id FROM users WHERE user_id = ? AND warnings >= ? ", (
-            message.from_user_id,
-            MAX_WARNINGS))
-
-    if await result_set.fetchone():
+    if await database_connection.has_reached_warning_limit(message.from_user_id, MAX_WARNINGS):
         await ban(message)
         return
 
