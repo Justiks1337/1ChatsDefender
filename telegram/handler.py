@@ -1,9 +1,11 @@
+import json
 import logging
 import time
 
 from aiogram import Router as AiogramRouter
 from aiogram.filters.command import Command
 from aiogram.types import Message
+from aiogram.utils.serialization import deserialize_telegram_object_to_python
 
 from telegram.Counter import Counter
 from telegram.admin_management import ChatAdminsFabric
@@ -12,6 +14,7 @@ from telegram.router import Router
 from utils.database.connection import DatabaseConnection
 
 router = AiogramRouter()
+
 
 @router.message(Command("ban"))
 async def ban_command_handler(message: Message):
@@ -32,22 +35,10 @@ async def ban_command_handler(message: Message):
     await message.delete()
 
     # write to database
-    connect = DatabaseConnection().connect
-
-    await connect.execute("INSERT OR IGNORE INTO messages VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (
+    await DatabaseConnection().save_banned_message(
         ban_message.text,
-        ban_message.from_user.id,
-        ban_message.date,
-        ban_message.from_user.full_name,
-        ban_message.from_user.username,
-        ban_message.from_user.language_code,
-        ban_message.from_user.is_premium,
-        int(bool(ban_message.forward_origin)),
-        0  # bot can't get access to message.reply_to_message.reply_to_message. Always is false
+        json.dumps(deserialize_telegram_object_to_python(ban_message), ensure_ascii=False, indent=4, default=str),
     )
-                          )
-
-    await connect.commit()
 
 
 @router.message(Command("ping"))
