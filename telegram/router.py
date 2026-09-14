@@ -2,12 +2,11 @@ from aiogram.types import Message as AiogramMessage
 
 from telegram.AiogramMessageMapper import AiogramMessageMapper
 from telegram.Counter import Counter
-from utils import Singleton
-from telegram.validate.Context import Context
 from telegram.middleware import middlewares
-from telegram.middleware.PunishmentMiddleware import PunishmentMiddleware
+from telegram.validate.Context import Context
 from telegram.validate.chains.DefaultChain import DefaultChain
 from telegram.validate.chains.SuperGroupChain import SuperGroupChain
+from utils import Singleton
 
 
 class Router(Singleton):
@@ -17,6 +16,16 @@ class Router(Singleton):
         self.super_group_chain = SuperGroupChain()
 
         self.default_chain.set_next(self.super_group_chain)
+
+        self.middleware_chain = None
+        current_middleware = None
+        for handler in middlewares:
+            if current_middleware is None:
+                self.middleware_chain = handler
+            else:
+                current_middleware.set_next(handler)
+
+            current_middleware = handler
 
     async def to_route(self, message: AiogramMessage):
         """
@@ -28,8 +37,7 @@ class Router(Singleton):
 
         context = Context(AiogramMessageMapper.map(message))
         context = await self.__validate_message(context)
-        context = await self.__execute_middleware(context)
-        await PunishmentMiddleware.execute(context)
+        await self.__execute_middleware(context)
 
         counter = Counter()
         counter.messages_handled += 1
@@ -44,18 +52,15 @@ class Router(Singleton):
 
         return await self.default_chain.handle(message)
 
-    async def __execute_middleware(self, message):
+    async def __execute_middleware(self, message: Context) -> Context:
         """
-        Execute all middlewares for this message
+        Выполнить цепочку middleware для сообщения.
 
-        :param message:  telegram.Context.Context
-        :return: edited message by middlewares
+        :param message: Контекст сообщения.
+        :return: Контекст после выполнения цепочки.
         """
 
-        if not message.execute_middleware:
+        if not message.execute_middleware or self.middleware_chain is None:
             return message
 
-        for middleware in middlewares:
-            message = await middleware.execute(message)
-
-        return message
+        return await self.middleware_chain.handle(message)
