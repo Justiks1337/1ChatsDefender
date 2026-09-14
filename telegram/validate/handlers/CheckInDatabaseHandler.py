@@ -26,11 +26,14 @@ class CheckInDatabaseHandler(AbstractHandler):
         return await self.__connection.is_message_banned(text)
 
     async def handle(self, message: Context):
-        if not isinstance(message.message.text, str):
-            logging.debug("CheckInDatabaseHandler пропущен: text не установлен")
+        text = message.message.text
+        if not isinstance(text, str):
+            text = message.message.caption
+        if not isinstance(text, str):
+            logging.debug("CheckInDatabaseHandler пропущен: текст и подпись не установлены")
             return await super().handle(message)
 
-        if await self._check_message(message.message.text):
+        if await self._check_message(text):
             message.is_trusted = False
             message.execute_middleware = True
             message.punishment = PunishmentCommand(
