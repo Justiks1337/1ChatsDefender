@@ -25,6 +25,8 @@ async def ban_command_handler(message: Message):
     # check user is admin
 
     message_data: MessageData = AiogramMessageMapper.map(message)
+    # TODO: Перед /ban проверять актуальные права администратора: кеш на сутки
+    # позволяет выполнять команду после снятия прав.
     if not await ChatAdminsFabric().is_admin(message_data):
         return
 

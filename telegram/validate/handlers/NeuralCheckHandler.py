@@ -24,9 +24,9 @@ class NeuralCheckHandler(AbstractHandler):
         text_result = False
         caption_result = False
 
-        if isinstance(text, str) and len(text.split(" ")) > 7:
+        if isinstance(text, str) and len(text.split()) > 7:
             text_result = neural_client.check_message(text)
-        if isinstance(caption, str) and len(caption.split(" ")) > 7:
+        if isinstance(caption, str) and len(caption.split()) > 7:
             caption_result = neural_client.check_message(caption)
 
         return caption_result or text_result
