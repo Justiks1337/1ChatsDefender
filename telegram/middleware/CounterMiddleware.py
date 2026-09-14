@@ -1,25 +1,23 @@
-from telegram.middleware.MiddlewareInterface import MiddlewareInterface
+from telegram.middleware.AbstractHandler import AbstractHandler
 from telegram.validate.Context import Context
 from telegram.Counter import Counter
 
 
-class CounterMiddleware(MiddlewareInterface):
+class CounterMiddleware(AbstractHandler):
     """
     Этот middleware считает статистику по боту
     """
 
-    @classmethod
-    async def execute(cls, message: Context) -> Context:
+    async def execute(self, context: Context) -> None:
         """
         Главный метод в middleware
 
-        :param message: Адаптер сообщения
-        :return: Измененный адаптер сообщения из аргументов
+        :param context: Адаптер сообщения
+        :return: None
         """
 
         counter = Counter()
 
         # Если сообщение подлежит удалению
-        if not message.is_trusted:
+        if not context.is_trusted:
             counter.messages_deleted += 1
-        return message

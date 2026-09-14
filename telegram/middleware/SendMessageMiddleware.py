@@ -5,29 +5,28 @@ from dotenv import load_dotenv
 
 from telegram.validate.Context import Context
 from telegram.dispatcher import bot
-from telegram.middleware.MiddlewareInterface import MiddlewareInterface
+from telegram.middleware.AbstractHandler import AbstractHandler
 
 load_dotenv()
 
 
-class SendMessageMiddleware(MiddlewareInterface):
+class SendMessageMiddleware(AbstractHandler):
 
     admins_chat_ids = int(os.environ["ADMINS_CHAT_ID"])  # Save admin chat id
 
-    @classmethod
-    async def execute(cls, message: Context) -> Context:
+    async def execute(self, context: Context) -> None:
 
-        text = message.message.text
+        text = context.message.text
         if not isinstance(text, str):
-            return message
+            return
 
         template = os.getenv("VIOLATION_MESSAGE")
         if not template:
             logging.warning("Уведомление пропущено: VIOLATION_MESSAGE не задано")
-            return message
+            return
 
-        nickname = message.message.from_user_full_name
-        chat_title = message.message.chat_title
+        nickname = context.message.from_user_full_name
+        chat_title = context.message.chat_title
         if not isinstance(nickname, str):
             nickname = "Неизвестный отправитель"
         if not isinstance(chat_title, str):
@@ -38,6 +37,4 @@ class SendMessageMiddleware(MiddlewareInterface):
             .replace("{chat}", chat_title) \
             .replace("{message}", text)
 
-        await bot.send_message(cls.admins_chat_ids, message_to_admins_chat)
-
-        return message
+        await bot.send_message(self.admins_chat_ids, message_to_admins_chat)
