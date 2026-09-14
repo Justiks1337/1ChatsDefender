@@ -15,7 +15,6 @@ class IsJoinMessageHandler(AbstractHandler):
             return await super().handle(message)
 
         if self._check_message(message.message.new_chat_members):
-            message.is_trusted = False
             message.punishment = PunishmentCommand(
                 PunishmentType.DELETE,
                 reason="Служебное сообщение о вступлении",

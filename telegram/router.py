@@ -60,7 +60,7 @@ class Router(Singleton):
         :return: Контекст после выполнения цепочки.
         """
 
-        if not message.execute_middleware or self.middleware_chain is None:
+        if self.middleware_chain is None:
             return message
 
         return await self.middleware_chain.handle(message)

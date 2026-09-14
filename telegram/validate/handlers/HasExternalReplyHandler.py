@@ -17,8 +17,6 @@ class HasExternalReplyHandler(AbstractHandler):
         # Проверяем, есть ли external_reply в сообщении
         if self._check_message(message.message.external_reply):
             # Если есть external_reply, то автор сообщения должен быть забанен
-            message.is_trusted = False
-            message.execute_middleware = True
             message.punishment = PunishmentCommand(
                 PunishmentType.BAN,
                 reason="Обнаружен внешний ответ",

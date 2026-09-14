@@ -33,7 +33,6 @@ class UpperCaseHandler(AbstractHandler):
             return await super().handle(message)
 
         if self._check_message(message_text, message_caption):
-            message.is_trusted = False
             message.punishment = PunishmentCommand(
                 PunishmentType.WARNING,
                 reason="Превышен допустимый процент заглавных букв",

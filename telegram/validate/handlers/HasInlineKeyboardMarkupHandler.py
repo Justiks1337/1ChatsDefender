@@ -23,7 +23,6 @@ class HasInlineKeyboardMarkupHandler(AbstractHandler):
         if not self._check_message(message.message.reply_markup):
             return await super().handle(message)
 
-        message.is_trusted = False
         message.execute_middleware = True
         message.punishment = PunishmentCommand(
             PunishmentType.BAN,
