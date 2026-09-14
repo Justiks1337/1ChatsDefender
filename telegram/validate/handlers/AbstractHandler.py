@@ -4,9 +4,9 @@ from typing import Any, Optional
 
 
 class Handler(ABC):
-    """
-    The Handler interface declares a method for building the chain of handlers.
-    It also declares a method for executing a request.
+    """Определяет интерфейс построения цепочки и выполнения запросов.
+
+    Метод set_next связывает обработчики, а handle запускает обработку.
     """
 
     @abstractmethod
@@ -19,9 +19,11 @@ class Handler(ABC):
 
 
 class AbstractHandler(Handler):
-    """
-    The default chaining behavior can be implemented inside a base handler
-    class.
+    """Реализует стандартное поведение звена цепочки проверок.
+
+    Базовый класс связывает обработчики и передаёт запрос следующему звену.
+    Подклассы дополняют handle своей проверкой и определяют доступность
+    через is_available.
     """
 
     _next_handler: Handler = None

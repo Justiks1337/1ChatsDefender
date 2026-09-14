@@ -6,6 +6,12 @@ from telegram.validate.handlers import AbstractHandler
 
 
 class IsJoinMessageHandler(AbstractHandler):
+    """Запрашивает удаление уведомления о новом участнике группы.
+
+    Позволяет очищать чат от служебных сообщений о вступлении пользователей.
+    При new_chat_members=True назначает удаление сообщения.
+    """
+
     def _check_message(self, new_chat_members: object) -> bool:
         return isinstance(new_chat_members, bool) and new_chat_members
 

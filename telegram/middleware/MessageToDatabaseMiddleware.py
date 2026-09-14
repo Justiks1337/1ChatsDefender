@@ -9,6 +9,12 @@ from telegram.validate.Context import Context
 
 
 class MessageToDatabaseMiddleware(AbstractHandler):
+    """Сохраняет в БД сообщения, представляющие интерес для анализа.
+
+    Записывает сообщения с назначенным наказанием: их текст или подпись
+    и сериализованные данные. Признак is_trusted в контексте определяет,
+    попадёт запись в таблицу доверенных или запрещённых сообщений.
+    """
     async def execute(self, context: Context) -> None:
 
         if context.punishment is None:

@@ -86,6 +86,11 @@ async def ping_command_handler(message: Message):
 
 @router.edited_message()
 @router.message()
-async def main_handler(message: Message):
+async def main_handler(message: Message) -> None:
+    """
+    Хендлер, который слушает все входящие в него сообщения
+    :param message: aiogram.Message объект
+    :return: None
+    """
     logging.debug(f"handle a message - {message.text}")
     await Router().to_route(message)

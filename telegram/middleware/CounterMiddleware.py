@@ -4,8 +4,10 @@ from telegram.Counter import Counter
 
 
 class CounterMiddleware(AbstractHandler):
-    """
-    Этот middleware считает статистику по боту
+    """Собирает статистику модерации для общего счётчика бота.
+
+    Для сообщений с назначенным наказанием увеличивает messages_deleted.
+    Счётчик отражает назначенные наказания, а не подтверждение удаления.
     """
 
     async def execute(self, context: Context) -> None:

@@ -4,7 +4,7 @@ from telegram.validate.MessageData import MessageData
 
 
 class AiogramMessageMapper:
-    """Преобразует сообщение aiogram в данные, необходимые цепочке проверок."""
+    """Преобразует сообщение aiogram в данные для цепочки проверок."""
 
     @staticmethod
     def map(message: AiogramMessage) -> MessageData:

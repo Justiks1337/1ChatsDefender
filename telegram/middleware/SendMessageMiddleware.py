@@ -11,6 +11,11 @@ load_dotenv()
 
 
 class SendMessageMiddleware(AbstractHandler):
+    """Уведомляет администрацию чата или бота о назначенном наказании.
+
+    Отправляет имя пользователя, название чата и текст сообщения
+    в административный чат ADMINS_CHAT_ID по шаблону VIOLATION_MESSAGE.
+    """
 
     admins_chat_ids = int(os.environ["ADMINS_CHAT_ID"])  # Save admin chat id
 

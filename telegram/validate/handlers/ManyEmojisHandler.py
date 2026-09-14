@@ -7,8 +7,22 @@ from telegram.validate.Context import Context
 from telegram.validate.PunishmentCommand import PunishmentCommand, PunishmentType
 
 
-# TODO: rewrite with message entities
-class HasPremiumEmojisHandler(AbstractHandler):
+class ManyEmojisHandler(AbstractHandler):
+    """Запрашивает удаление сообщения с избыточным количеством эмодзи.
+
+    Мошенники могут использовать премиум-эмодзи вместо букв, чтобы скрыть
+    настоящее содержание текста и затруднить поиск запрещённых выражений.
+    Превышение допустимого количества эмодзи считается признаком
+    подозрительного сообщения.
+
+    В текущей реализации текст и подпись проверяются отдельно:
+    пять и более символов, распознанных emoji.is_emoji при посимвольном
+    обходе, вызывают срабатывание. Например, пять обычных эмодзи в тексте
+    превысят лимит. Отдельного анализа Telegram-премиум-эмодзи здесь нет.
+
+    Назначает предупреждение, исполнение которого включает удаление сообщения.
+    """
+
     def _check_message(self, text: object, caption: object) -> bool:
         return not (self._validate_text(text) and self._validate_text(caption))
 
@@ -16,7 +30,7 @@ class HasPremiumEmojisHandler(AbstractHandler):
         text = message.message.text
         caption = message.message.caption
         if not isinstance(text, str) and not isinstance(caption, str):
-            logging.debug("HasPremiumEmojisHandler пропущен: text и caption не установлены")
+            logging.debug("ManyEmojisHandler пропущен: text и caption не установлены")
             return await super().handle(message)
 
         if self._check_message(text, caption):
@@ -25,7 +39,7 @@ class HasPremiumEmojisHandler(AbstractHandler):
                 reason="Превышен лимит эмодзи",
                 source=type(self).__name__,
             )
-            logging.info("HasPremiumEmojisHandler is worked now")
+            logging.info("ManyEmojisHandler is worked now")
             return message
 
         return await super().handle(message)

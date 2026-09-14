@@ -3,7 +3,7 @@ from telegram.validate.handlers.CheckInDatabaseHandler import CheckInDatabaseHan
 from telegram.validate.handlers.EmptyHandler import EmptyHandler
 from telegram.validate.handlers.HasExternalReplyHandler import HasExternalReplyHandler
 from telegram.validate.handlers.HasInlineKeyboardMarkupHandler import HasInlineKeyboardMarkupHandler
-from telegram.validate.handlers.HasPremiumEmojisHandler import HasPremiumEmojisHandler
+from telegram.validate.handlers.ManyEmojisHandler import ManyEmojisHandler
 from telegram.validate.handlers.ImageTextHandler import ImageTextHandler
 from telegram.validate.handlers.IsAdminHandler import IsAdminHandler
 from telegram.validate.handlers.IsGroupHandler import IsGroupHandler
@@ -22,7 +22,7 @@ __all__ = [
     "EmptyHandler",
     "HasExternalReplyHandler",
     "HasInlineKeyboardMarkupHandler",
-    "HasPremiumEmojisHandler",
+    "ManyEmojisHandler",
     "ImageTextHandler",
     "IsAdminHandler",
     "IsGroupHandler",

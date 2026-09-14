@@ -11,6 +11,12 @@ PunishmentHandler = Callable[[MessageData], Awaitable[None]]
 
 
 class PunishmentMiddleware(AbstractHandler):
+    """Применяет наказание, назначенное цепочкой проверок.
+
+    Если команда присутствует в контексте, вызывает соответствующий
+    обработчик удаления, предупреждения или бана.
+    """
+
     _handlers: dict[PunishmentType, PunishmentHandler] = {
         PunishmentType.DELETE: delete,
         PunishmentType.WARNING: warning,

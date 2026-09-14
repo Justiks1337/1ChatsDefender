@@ -4,9 +4,10 @@ from utils.patterns.singleton import Singleton
 
 
 class Counter(Singleton):
-    """
-    Счетчик для вывода данных в /ping
-    Singleton паттерн
+    """Хранит статистику работы бота для вывода в команде /ping.
+
+    Использует паттерн Singleton: счётчики и время запуска хранятся
+    в единственном экземпляре класса.
     """
 
     def init(self):

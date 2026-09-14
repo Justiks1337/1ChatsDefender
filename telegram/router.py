@@ -10,6 +10,12 @@ from utils import Singleton
 
 
 class Router(Singleton):
+    """Проводит входящее сообщение через проверки и middleware.
+
+    Создаёт контекст, запускает базовую и дополнительную цепочки проверок,
+    затем выполняет middleware и обновляет статистику обработанных сообщений.
+    Использует паттерн Singleton.
+    """
 
     def init(self):
         self.default_chain = DefaultChain()

@@ -5,7 +5,7 @@ from telegram.validate.handlers import AbstractHandler
 from telegram.validate.Context import Context
 from telegram.validate.handlers import CheckInDatabaseHandler
 from telegram.validate.handlers import NeuralCheckHandler
-from telegram.validate.handlers import HasPremiumEmojisHandler
+from telegram.validate.handlers import ManyEmojisHandler
 from telegram.validate.handlers import ManySpacesHandler
 from telegram.validate.handlers import RegexHandler
 from telegram.validate.handlers import HasInlineKeyboardMarkupHandler
@@ -18,6 +18,12 @@ from telegram.validate.handlers import HasExternalReplyHandler
 
 
 class SuperGroupChain(AbstractHandler):
+    """Объединяет дополнительные проверки для выбранных чатов.
+
+    В чатах из whitelisted_chats проверяет признаки спама, доверие
+    к участнику, наличие текста в БД, результат классификации моделью
+    и текст на фотографиях. В цепочку включает доступные обработчики.
+    """
 
     whitelisted_chats = [-1001440778604, -1001375992358, -4288058510, -1002184712714, -4520083042, -1002168533309, -1002590134862, -1002090117492]
 
@@ -27,7 +33,7 @@ class SuperGroupChain(AbstractHandler):
             HasInlineKeyboardMarkupHandler(),
             IsTrustedMemberHandler(),
             HasExternalReplyHandler(),
-            HasPremiumEmojisHandler(),
+            ManyEmojisHandler(),
             ManySpacesHandler(),
             UpperCaseHandler(),
             RegexHandler(text=os.getenv("SUPERGROUP_BANWORD_REGEX")),
