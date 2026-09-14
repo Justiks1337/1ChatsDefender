@@ -12,7 +12,6 @@ from telegram.validate.MessageData import MessageData
 load_dotenv()
 
 
-
 MAX_WARNINGS = int(os.environ["MAX_WARNINGS"])  # Used in warnings async function
 
 

@@ -18,14 +18,10 @@ class UpperCaseHandler(AbstractHandler):
 
     def _check_message(self, text: object, caption: object) -> bool:
         text_result = (
-            isinstance(text, str)
-            and len(text) > self.MINIMUM_SYMBOLS
-            and self._check_text(text)
+            isinstance(text, str) and len(text) > self.MINIMUM_SYMBOLS and self._check_text(text)
         )
         caption_result = (
-            isinstance(caption, str)
-            and len(caption) > self.MINIMUM_SYMBOLS
-            and self._check_text(caption)
+            isinstance(caption, str) and len(caption) > self.MINIMUM_SYMBOLS and self._check_text(caption)
         )
         return text_result or caption_result
 
