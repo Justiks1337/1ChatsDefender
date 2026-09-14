@@ -40,7 +40,7 @@ async def ban_command_handler(message: Message):
 
     # write to database
     await DatabaseConnection().save_banned_message(
-        ban_message.text,
+        ban_message.text if ban_message.text is not None else ban_message.caption,
         json.dumps(deserialize_telegram_object_to_python(ban_message), ensure_ascii=False, indent=4, default=str),
     )
 

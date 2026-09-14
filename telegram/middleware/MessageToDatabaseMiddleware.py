@@ -18,6 +18,8 @@ class MessageToDatabaseMiddleware(MiddlewareInterface):
             deserialize_telegram_object_to_python(message.message), ensure_ascii=False, indent=4, default=str
         )
         text = message.message.text
+        if text is None or isinstance(text, UnsetType):
+            text = message.message.caption
         if isinstance(text, UnsetType):
             text = None
         if text is not None and not isinstance(text, str):
