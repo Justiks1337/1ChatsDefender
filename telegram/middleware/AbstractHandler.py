@@ -26,6 +26,7 @@ class Handler(ABC):
     async def execute(self, context: Context) -> None:
         pass
 
+
 # TODO: Решить проблему повторяющегося кода цепочки обязанностей
 # в middleware и telegram/validate/handlers/AbstractHandler.py.
 class AbstractHandler(Handler):

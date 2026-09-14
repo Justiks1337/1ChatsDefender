@@ -30,7 +30,6 @@ class ImageTextHandler(AbstractHandler):
                 "Не удалось загрузить ImageTextHandler из-за недостающей зависимости"
             )
 
-
     def _check_message(self, text: str) -> bool:
         return self.__ai_client.check_message(text)
 
