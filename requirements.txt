@@ -19,7 +19,7 @@ fsspec==2026.7.0
 idna==3.19
 ImageIO==2.37.4
 Jinja2==3.1.6
-joblib==1.5.3
+joblib==1.6.0
 lazy-loader==0.5
 magic-filter==1.0.12
 MarkupSafe==3.0.3
