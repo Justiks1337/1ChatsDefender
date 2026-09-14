@@ -48,7 +48,14 @@ class ImageTextHandler(AbstractHandler):
                 ) as response:
                     if response.status == 200:
                         result = await response.json()
-                        return result.get("text", "")
+                        if not isinstance(result, dict):
+                            logging.warning("OCR вернул ответ неправильного типа")
+                            return None
+                        text = result.get("text")
+                        if not isinstance(text, str):
+                            logging.warning("OCR не вернул строку с текстом")
+                            return None
+                        return text
                     else:
                         logging.error(f"OCR service error: {response.status}")
                         return None
@@ -63,7 +70,15 @@ class ImageTextHandler(AbstractHandler):
             return await super().handle(message)
 
         photo_size = message.message.photo[-1]
-        photo = await self.__bot.download(file=photo_size.file_id)
+        file_id = getattr(photo_size, "file_id", None)
+        if not isinstance(file_id, str) or not file_id:
+            logging.warning("Проверка изображения пропущена: file_id не задан")
+            return await super().handle(message)
+
+        photo = await self.__bot.download(file=file_id)
+        if photo is None:
+            logging.warning("Проверка изображения пропущена: файл не получен")
+            return await super().handle(message)
         photo_bytes = photo.read()
         # Извлекаем текст через OCR микросервис
         photo_text: str | None = await self.extract_text_from_image(photo_bytes)

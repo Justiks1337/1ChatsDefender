@@ -12,6 +12,8 @@ from telegram.admin_management import ChatAdminsFabric
 from telegram.punishments import ban
 from telegram.router import Router
 from utils.database.connection import DatabaseConnection
+from telegram.AiogramMessageMapper import AiogramMessageMapper
+from telegram.validate.MessageData import MessageData
 
 router = AiogramRouter()
 
@@ -21,7 +23,9 @@ async def ban_command_handler(message: Message):
     """delete reply_to_message and write it to database"""
 
     # check user is admin
-    if not await ChatAdminsFabric().is_admin(message):
+
+    message_data: MessageData = AiogramMessageMapper.map(message)
+    if not await ChatAdminsFabric().is_admin(message_data):
         return
 
     if not message.reply_to_message:
@@ -29,7 +33,7 @@ async def ban_command_handler(message: Message):
 
     # ban user
     ban_message = message.reply_to_message
-    await ban(ban_message)
+    await ban(AiogramMessageMapper.map(ban_message))
 
     # clear chat
     await message.delete()

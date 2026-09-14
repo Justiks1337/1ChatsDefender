@@ -14,62 +14,69 @@ class DatabaseConnection(Singleton):
     def init(self):
         self.connect: Optional[aiosqlite.Connection] = None
 
+    @property
+    def connection(self) -> aiosqlite.Connection:
+        connection = self.connect
+        if connection is None:
+            raise RuntimeError("Соединение с БД не открыто или уже закрыто")
+        return connection
+
     async def create_tables(self):
-        async with self.connect.execute("""CREATE TABLE IF NOT EXISTS banned_messages (
+        async with self.connection.execute("""CREATE TABLE IF NOT EXISTS banned_messages (
             message TEXT PRIMARY KEY,
             payload TEXT
             )
         """):
             pass
 
-        async with self.connect.execute("""CREATE TABLE IF NOT EXISTS users (
+        async with self.connection.execute("""CREATE TABLE IF NOT EXISTS users (
             user_id INTEGER PRIMARY KEY,
             warnings INTEGER
         )"""):
             pass
 
-        async with self.connect.execute("""CREATE TABLE IF NOT EXISTS member_joins (
+        async with self.connection.execute("""CREATE TABLE IF NOT EXISTS member_joins (
             user_id INTEGER PRIMARY KEY,
             joined_at INTEGER
         )"""):
             pass
 
-        async with self.connect.execute("""CREATE TABLE IF NOT EXISTS trusted_messages (
+        async with self.connection.execute("""CREATE TABLE IF NOT EXISTS trusted_messages (
             text TEXT,
             json_payload TEXT
         )"""):
             pass
 
-        await self.connect.commit()
+        await self.connection.commit()
 
     async def get_connection(self):
-        self.connect = await aiosqlite.connect(os.getenv("DATABASE_NAME"))
+        self.connect = await aiosqlite.connect(os.environ["DATABASE_NAME"])
         await self.create_tables()
 
     async def is_message_banned(self, text: str) -> bool:
-        async with self.connect.execute(
+        async with self.connection.execute(
             "SELECT * FROM banned_messages WHERE message=?", (text,)
         ) as cursor:
             return await cursor.fetchone() is not None
 
     async def save_banned_message(self, text: Optional[str], payload: str):
-        async with self.connect.execute(
+        async with self.connection.execute(
             "INSERT OR IGNORE INTO banned_messages (message, payload) VALUES (?, ?)",
             (text, payload),
         ):
             pass
-        await self.connect.commit()
+        await self.connection.commit()
 
     async def save_trusted_message(self, text: Optional[str], payload: str):
-        async with self.connect.execute(
+        async with self.connection.execute(
             "INSERT OR IGNORE INTO trusted_messages (text, json_payload) VALUES (?, ?)",
             (text, payload),
         ):
             pass
-        await self.connect.commit()
+        await self.connection.commit()
 
     async def increment_warnings(self, user_id: int):
-        async with self.connect.execute(
+        async with self.connection.execute(
             """
             INSERT INTO users (user_id, warnings)
             VALUES (?, 1)
@@ -78,29 +85,34 @@ class DatabaseConnection(Singleton):
             (user_id,),
         ):
             pass
-        await self.connect.commit()
+        await self.connection.commit()
 
     async def has_reached_warning_limit(self, user_id: int, limit: int) -> bool:
-        async with self.connect.execute(
+        async with self.connection.execute(
             "SELECT user_id FROM users WHERE user_id = ? AND warnings >= ?",
             (user_id, limit),
         ) as cursor:
             return await cursor.fetchone() is not None
 
     async def get_member_joined_at(self, user_id: int) -> Optional[float]:
-        async with self.connect.execute(
+        async with self.connection.execute(
             "SELECT joined_at FROM member_joins WHERE user_id=?", (user_id,)
         ) as cursor:
             result = await cursor.fetchone()
-        return result[0] if result is not None else None
+        if result is None or result[0] is None:
+            return None
+        joined_at = result[0]
+        if type(joined_at) not in (int, float):
+            raise TypeError("Время вступления в БД должно быть числом")
+        return float(joined_at)
 
     async def add_member(self, user_id: int, joined_at: float):
-        async with self.connect.execute(
+        async with self.connection.execute(
             "INSERT INTO member_joins (user_id, joined_at) VALUES (?, ?)",
             (user_id, joined_at),
         ):
             pass
-        await self.connect.commit()
+        await self.connection.commit()
 
     async def close(self):
         """

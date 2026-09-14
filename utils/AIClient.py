@@ -36,8 +36,8 @@ class AIClient(Singleton, AIClientInterface):
 
         # WARNING! HIGH RESOURCES OPERATIONS!
         self.__morph = pymorphy3.MorphAnalyzer()
-        self.__model = joblib.load(os.getenv('MODEL_PATH'))
-        self.__tfidf = joblib.load(os.getenv('TFIDF_PATH'))
+        self.__model = joblib.load(os.environ['MODEL_PATH'])
+        self.__tfidf = joblib.load(os.environ['TFIDF_PATH'])
 
         # uses in __clear_message for remove all special symbols
         self.__pattern = re.compile(r"[^a-zA-Zа-яА-Я0-9\s]")

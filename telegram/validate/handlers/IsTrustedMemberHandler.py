@@ -13,7 +13,7 @@ class IsTrustedMemberHandler(AbstractHandler):
     """
 
     # Время в секундах, после которого пользователь считается доверенным и игнорируется
-    IS_TRUSTED_MEMBER = int(os.getenv('IS_TRUSTED_MEMBER'))
+    IS_TRUSTED_MEMBER = int(os.environ['IS_TRUSTED_MEMBER'])
 
     def __init__(self):
         self.__is_available = True

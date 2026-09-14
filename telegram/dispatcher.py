@@ -17,4 +17,4 @@ load_dotenv(".env")
 session = AiohttpSession(proxy=os.getenv("PROXY_URL"))
 
 dp = Dispatcher(storage=MemoryStorage())
-bot = Bot(os.getenv("BOT_TOKEN"), session=session)
+bot = Bot(os.environ["BOT_TOKEN"], session=session)

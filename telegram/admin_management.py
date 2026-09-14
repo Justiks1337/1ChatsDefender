@@ -1,7 +1,8 @@
 import time
+import logging
 from typing import List, Dict
 
-from aiogram.types import Message
+from telegram.validate.MessageData import MessageData
 
 from telegram.dispatcher import bot
 from utils.patterns.singleton import Singleton
@@ -36,7 +37,7 @@ class ChatAdminsFabric(Singleton):
     def init(self):
         self.cached_chat_administrators: Dict[int, AdministratorsCache] = {}
 
-    async def is_admin(self, message: Message) -> bool:
+    async def is_admin(self, message: MessageData) -> bool:
         """
         check message author is admin by aiogram.types.Message object
         replace ChatAdminFabric.get by this
@@ -44,19 +45,23 @@ class ChatAdminsFabric(Singleton):
         :return True if message author is admin else False
         """
 
-        # search in administrators list
-        user_id = message.from_user_id
-        admins = await self.get(message.chat_id)
-
-        if user_id in admins:
-            return True
+        if isinstance(message.from_user_id, int):
+            if isinstance(message.chat_id, int):
+                admins = await self.get(message.chat_id)
+                if message.from_user_id in admins:
+                    return True
+            else:
+                logging.warning("admin_management, MessageData not contains message.chat_id")
+        else:
+            logging.warning("admin_management, MessageData not contains message.from_user_id")
 
         # bot.get_chat_administrators (using in self.__get_administrators_from_server) isn't return anonymous chat administrators
         # in this case anonymous administrator isn't trusted
         # check user is admin by User.is_bot = True
 
-        if message.from_user_is_bot:
-            return True
+        if isinstance(message.from_user_is_bot, int):
+            if message.from_user_is_bot:
+                return True
 
         # member is not admin
         return False
@@ -73,7 +78,7 @@ class ChatAdminsFabric(Singleton):
         # Attempt get administrators from server
         return await self.__get_administrators_from_server(chat_id)
 
-    def __get_administrators_from_cache(self, chat_id: int) -> AdministratorsCache:
+    def __get_administrators_from_cache(self, chat_id: int) -> AdministratorsCache | None:
         administrators = self.cached_chat_administrators.get(chat_id)
 
         # administrators may be is None, that's why I use isinstance. If it is not None, check validity
