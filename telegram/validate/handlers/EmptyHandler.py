@@ -3,8 +3,10 @@ from telegram.validate.handlers.AbstractHandler import AbstractHandler
 
 
 class EmptyHandler(AbstractHandler):
-    """
-    Handler с которого должны начинаться все Chains
+    """Служит начальным обработчиком для всех цепочек проверок.
+
+    Не выполняет собственных проверок и передаёт контекст следующему звену.
+    Если цепочка пуста, возвращает исходный контекст.
     """
 
     async def handle(self, message: Context):

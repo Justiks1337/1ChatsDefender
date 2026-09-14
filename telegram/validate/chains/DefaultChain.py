@@ -10,6 +10,12 @@ from telegram.validate.handlers import EmptyHandler
 
 
 class DefaultChain(AbstractHandler):
+    """Объединяет базовые проверки входящих сообщений.
+
+    Проверяет личный чат, уведомления о вступлении, права администратора
+    и запрещённые выражения. Продолжает обработку следующей цепочкой,
+    если наказание не назначено и дальнейшие проверки разрешены.
+    """
 
     def __init__(self):
         self.first_handler = EmptyHandler()

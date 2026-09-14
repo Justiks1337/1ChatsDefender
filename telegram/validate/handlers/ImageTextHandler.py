@@ -9,8 +9,14 @@ from telegram.validate.handlers.AbstractHandler import AbstractHandler
 
 
 class ImageTextHandler(AbstractHandler):
-    """
-Проверка текста с картинки через OCR микросервис
+    """Проверяет текст на изображении через OCR-микросервис.
+
+    Нужен, когда рекламный или мошеннический текст размещён на фотографии,
+    а не в самом сообщении и поэтому недоступен обычным текстовым проверкам.
+
+    Загружает фотографию, извлекает текст через OCR и передаёт его AIClient.
+    Если модель обнаруживает спам, назначает предупреждение с удалением
+    сообщения при исполнении наказания.
     """
 
     def __init__(self):
@@ -42,8 +48,8 @@ class ImageTextHandler(AbstractHandler):
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.post(
-                    self.ocr_service_url,
-                    data={"image": image_bytes}
+                        self.ocr_service_url,
+                        data={"image": image_bytes}
                 ) as response:
                     if response.status == 200:
                         result = await response.json()

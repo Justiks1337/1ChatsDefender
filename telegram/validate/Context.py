@@ -4,14 +4,12 @@ from telegram.validate.PunishmentCommand import PunishmentCommand
 
 class Context:
 
-    """
-    Instances of this class will go through a chain of checks
+    """Передаёт данные и состояние сообщения по цепочке проверок.
 
-    Context attrs:
-
-    message: telegram.MessageData - датакласс содержащий нужную для чеков информацию о сообщении
-    punishment: команда наказания, исполняемая после middleware
-    is_trusted: bool - has the message passed verification
+    Атрибуты:
+        message: Датакласс MessageData с информацией, необходимой проверкам.
+        punishment: Команда наказания, исполняемая на этапе middleware.
+        next_handler: Признак, разрешающий продолжение проверок.
     """
 
     def __init__(self, message: MessageData):

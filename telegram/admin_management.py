@@ -9,7 +9,11 @@ from utils.patterns.singleton import Singleton
 
 
 class AdministratorsCache:
-    """This class instances implements administrators cache"""
+    """Хранит кэш идентификаторов администраторов чата.
+
+    Позволяет проверить наличие пользователя в кэше и срок его действия.
+    Запись считается актуальной в течение суток после создания.
+    """
 
     INSTANCE_LIFE_TIME = 86400
 
@@ -25,14 +29,15 @@ class AdministratorsCache:
 
 
 class ChatAdminsFabric(Singleton):
+    """Предоставляет сведения об администраторах чатов с кэшированием.
+
+    Сначала ищет идентификаторы администраторов в локальном кэше.
+    Если актуальной записи нет, запрашивает список у Telegram.
+
+    Кэш хранится в словаре cached_chat_administrators: ключ — chat_id,
+    значение — экземпляр AdministratorsCache со списком идентификаторов.
+    Использует паттерн Singleton.
     """
-    ChatAdminsFabric
-
-    First, the algorithm tries to get the administrators' IDs from this dict;
-    if it did not work, then a request is made to the servers
-
-    cache stored in instance dict - cached_chat_administrators Pairs - chat_id: array of Administrator instances
-                                                    """
 
     def init(self):
         self.cached_chat_administrators: Dict[int, AdministratorsCache] = {}

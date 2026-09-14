@@ -9,9 +9,10 @@ from telegram.validate.Context import Context
 
 
 class Handler(ABC):
-    """
-    The Handler interface declares a method for building the chain of handlers.
-    It also declares a method for executing a request.
+    """Определяет интерфейс построения цепочки и выполнения запросов.
+
+    Метод set_next связывает обработчики, а handle запускает обработку.
+    Метод execute задаёт отдельное действие middleware над контекстом.
     """
 
     @abstractmethod
@@ -30,7 +31,11 @@ class Handler(ABC):
 # TODO: Решить проблему повторяющегося кода цепочки обязанностей
 # в middleware и telegram/validate/handlers/AbstractHandler.py.
 class AbstractHandler(Handler):
-    """Выполняет middleware и передаёт результат следующему обработчику."""
+    """Выполняет middleware и передаёт результат следующему обработчику.
+
+    Подклассы реализуют действие в execute. Ошибки этого действия
+    логируются и не прерывают выполнение оставшейся цепочки.
+    """
 
     async def execute(self, context: Context) -> None:
         raise NotImplementedError("execute(context: Context) not implemented")

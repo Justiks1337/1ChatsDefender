@@ -5,8 +5,11 @@ from telegram.validate.handlers import AbstractHandler
 
 
 class IsGroupHandler(AbstractHandler):
-    """
-    This handler check, message send in a group, or in a dm
+    """Определяет, отправлено сообщение в группу или в личный чат.
+
+    Если chat_id совпадает с идентификатором отправителя, останавливает
+    проверки: правила модерации групп не должны применяться, например,
+    к личному обращению пользователя к боту.
     """
     async def handle(self, message: Context):
         if not isinstance(message.message.chat_id, int) or not isinstance(message.message.from_user_id, int):
