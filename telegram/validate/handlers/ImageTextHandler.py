@@ -87,8 +87,6 @@ class ImageTextHandler(AbstractHandler):
             return await super().handle(message)
 
         if self._check_message(photo_text):
-            message.is_trusted = False
-            message.execute_middleware = True
             message.punishment = PunishmentCommand(
                 PunishmentType.WARNING,
                 reason="Недопустимый текст на изображении",

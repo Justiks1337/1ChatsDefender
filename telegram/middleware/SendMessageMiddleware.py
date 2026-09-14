@@ -16,6 +16,9 @@ class SendMessageMiddleware(AbstractHandler):
 
     async def execute(self, context: Context) -> None:
 
+        if context.punishment is None:
+            return
+
         text = context.message.text
         if not isinstance(text, str):
             return

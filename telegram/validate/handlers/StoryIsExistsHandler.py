@@ -15,8 +15,6 @@ class StoryIsExistsHandler(AbstractHandler):
             return await super().handle(message)
 
         if self._check_message(message.message.story):
-            message.is_trusted = False
-            message.execute_middleware = True
             message.punishment = PunishmentCommand(
                 PunishmentType.BAN,
                 reason="Обнаружена история",

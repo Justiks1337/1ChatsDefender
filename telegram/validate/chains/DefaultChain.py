@@ -26,9 +26,9 @@ class DefaultChain(AbstractHandler):
                 current_handler = current_handler.set_next(handler)
 
     async def handle(self, message: Context):
-        result = await self.first_handler.handle(message)
+        result: Context = await self.first_handler.handle(message)
 
-        if not result.is_trusted or not result.next_handler:
+        if result.punishment is not None or not result.next_handler:
             logging.info("Default chain handle a violation.")
             return result
 

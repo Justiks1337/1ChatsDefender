@@ -10,6 +10,10 @@ from telegram.validate.Context import Context
 
 class MessageToDatabaseMiddleware(AbstractHandler):
     async def execute(self, context: Context) -> None:
+
+        if context.punishment is None:
+            return
+
         database = DatabaseConnection()
         # TODO: Исправить использование deserialize_telegram_object_to_python
         # для MessageData с учётом UNSET и вложенных объектов photo.

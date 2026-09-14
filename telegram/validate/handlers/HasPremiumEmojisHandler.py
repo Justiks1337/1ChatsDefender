@@ -20,8 +20,6 @@ class HasPremiumEmojisHandler(AbstractHandler):
             return await super().handle(message)
 
         if self._check_message(text, caption):
-            message.is_trusted = False
-            message.execute_middleware = True
             message.punishment = PunishmentCommand(
                 PunishmentType.WARNING,
                 reason="Превышен лимит эмодзи",

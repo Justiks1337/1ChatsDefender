@@ -39,8 +39,6 @@ class NeuralCheckHandler(AbstractHandler):
             return await super().handle(message)
 
         if self._check_message(message_text, message_caption):
-            message.is_trusted = False
-            message.execute_middleware = True
             message.punishment = PunishmentCommand(
                 PunishmentType.WARNING,
                 reason="Сообщение отклонено моделью",

@@ -19,5 +19,5 @@ class CounterMiddleware(AbstractHandler):
         counter = Counter()
 
         # Если сообщение подлежит удалению
-        if not context.is_trusted:
+        if context.punishment is not None:
             counter.messages_deleted += 1

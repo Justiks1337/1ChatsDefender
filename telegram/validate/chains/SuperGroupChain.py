@@ -50,9 +50,9 @@ class SuperGroupChain(AbstractHandler):
         if message.message.chat_id not in SuperGroupChain.whitelisted_chats:
             return await super().handle(message)
 
-        result = await self.first_handler.handle(message)
+        result: Context = await self.first_handler.handle(message)
 
-        if not result.is_trusted or not result.next_handler:
+        if result.punishment is not None or not result.next_handler:
             logging.info("SuperGroupChain handle a violation!")
             return message
 
