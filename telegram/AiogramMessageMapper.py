@@ -1,6 +1,6 @@
 from aiogram.types import Message as AiogramMessage
 
-from telegram.validate.MessageData import MessageData
+from telegram.validate.MessageData import MessageData, PhotoSizeData
 
 
 class AiogramMessageMapper:
@@ -21,7 +21,7 @@ class AiogramMessageMapper:
             chat_title=message.chat.title,
             story=True if message.story is not None else None,
             reply_markup=True if message.reply_markup is not None else None,
-            photo=message.photo,
+            photo=[PhotoSizeData(file_id=message.photo[-1].file_id)],
             new_chat_members=True if message.new_chat_members else None,
             external_reply=True if message.external_reply is not None else None,
         )

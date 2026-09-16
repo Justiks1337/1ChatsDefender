@@ -1,11 +1,19 @@
 from dataclasses import dataclass
 from typing import List
 
+from pydantic import BaseModel
+
 from telegram.validate.sentinels import UNSET, UnsetType
 
+class PhotoSizeData(BaseModel):
+    """
+    Информация о фотографии в чате
+    В бизнес логике используется только один атрибут file_id. По мере надобности добавьте новые атрибуты.
+    """
+    file_id: str | None
 
-@dataclass(kw_only=True)
-class MessageData:
+
+class MessageData(BaseModel):
     """Содержит компоненты Telegram-сообщения, необходимые для проверок.
 
     Хранит текст, идентификаторы сообщения, отправителя и чата, а также
@@ -30,6 +38,6 @@ class MessageData:
 
     story: bool | None | UnsetType = UNSET  # Для бизнес логики имеет значение только наличие или отсутствие этого поля
     reply_markup: bool | None | UnsetType = UNSET  # Для бизнес логики имеет значение только наличие или отсутствие этого поля
-    photo: List | None | UnsetType = UNSET  # TODO: В данный момент поле зависит от aiogram, оставил так для обратной совместимости
+    photo: List[PhotoSizeData] | None | UnsetType = UNSET  # См. документацию PhotoSizeData. Реализовано анологично aiogram
     new_chat_members: bool | None | UnsetType = UNSET  # Для бизнес логики имеет значение только наличие или отсутствие этого поля
     external_reply: bool | None | UnsetType = UNSET  # Для бизнес логики имеет значение только наличие или отсутствие этого поля
