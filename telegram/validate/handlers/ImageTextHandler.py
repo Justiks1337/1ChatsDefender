@@ -75,7 +75,7 @@ class ImageTextHandler(AbstractHandler):
             return await super().handle(message)
 
         photo_size = message.message.photo[-1]
-        file_id = getattr(photo_size, "file_id", None)
+        file_id = photo_size.file_id
         if not isinstance(file_id, str) or not file_id:
             logging.warning("Проверка изображения пропущена: file_id не задан")
             return await super().handle(message)
