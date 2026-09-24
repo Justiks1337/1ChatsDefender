@@ -38,7 +38,7 @@ propcache==0.5.4
 pyasn1==0.6.4
 pycodestyle==2.14.0
 pydantic==2.12.5
-pydantic_core==2.41.5
+pydantic_core==2.49.0
 pyflakes==3.4.0
 pymorphy3==2.0.6
 pymorphy3-dicts-ru==2.4.417150.4580142
