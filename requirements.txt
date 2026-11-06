@@ -48,7 +48,7 @@ PyYAML==6.0.3
 regex==2026.9.10
 scikit-learn==1.9.1
 scipy==1.18.1
-setuptools==84.0.0
+setuptools==84.1.0
 shapely==2.1.2
 sympy==1.14.0
 threadpoolctl==3.6.0
