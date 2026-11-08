@@ -218,6 +218,7 @@ __marimo__/
 
 secrets.txt
 .env*
+!.env.example
 database.db
 vars.txt
 opencode.json
